@@ -15,6 +15,13 @@ complete module for IP addresses & networks on CPAN, but provides a saner API.
 This distro contains two module, L<Net::Works::Address> and
 L<Net::Works::Network>.
 
+=head1 BIG INTEGERS
+
+If you're using this module to work with IPv6 addresses, then you'll end up
+creating big integers at some point. We strongly recommend that you install
+L<Math::BigInt::GMP> or L<Math::BigInt::Pari>. The default pure Perl
+implementation of big integers can be very, very slow.
+
 =head1 Net::Works VERSUS NetAddr::IP
 
 Here are some of the key differences between the two distributions:
