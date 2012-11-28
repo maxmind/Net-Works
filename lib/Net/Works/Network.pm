@@ -289,26 +289,26 @@ __END__
 
 =head1 SYNOPSIS
 
-  my $subnet = Net::Works::Network->new( subnet => '1.0.0.0/24' );
-  print $subnet->as_string();          # 1.0.0.0/28
-  print $subnet->netmask_as_integer(); # 24
-  print $subnet->mask_length();        # 32
-  print $subnet->version();            # 4
+  my $network = Net::Works::Network->new( subnet => '1.0.0.0/24' );
+  print $network->as_string();          # 1.0.0.0/28
+  print $network->netmask_as_integer(); # 24
+  print $network->mask_length();        # 32
+  print $network->version();            # 4
 
-  my $first = $subnet->first();
+  my $first = $network->first();
   print $first->as_string();    # 1.0.0.0
 
-  my $last = $subnet->first();
+  my $last = $network->first();
   print $last->as_string();     # 1.0.0.255
 
-  my $iterator = $subnet->iterator();
+  my $iterator = $network->iterator();
   while ( my $ip = $iterator->() ) { ... }
 
-  my $subnet = Net::Works::Network->new( subnet => '1.0.0.4/32' );
-  print $subnet->max_netmask_as_integer(); # 30
+  my $network = Net::Works::Network->new( subnet => '1.0.0.4/32' );
+  print $network->max_netmask_as_integer(); # 30
 
   # All methods work with IPv4 and IPv6 subnets
-  my $subnet = Net::Works::Network->new( subnet => 'a800:f000::/20' );
+  my $network = Net::Works::Network->new( subnet => 'a800:f000::/20' );
 
   my @subnets = Net::Works::Network->range_as_subnets( '1.1.1.1', '1.1.1.32' );
   print $_->as_string, "\n" for @subnets;
@@ -346,39 +346,39 @@ this unless you're trying to force a dotted quad to be interpreted as an IPv6
 subnet or to a force an IPv6 address colon-separated hex number to be
 interpreted as an IPv4 subnet.
 
-=head2 $subnet->as_string()
+=head2 $network->as_string()
 
 Returns a string representation of the subnet like "1.0.0.0/24" or
 "a800:f000::/105".
 
-=head2 $subnet->version()
+=head2 $network->version()
 
 Returns a 4 or 6 to indicate whether this is an IPv4 or IPv6 subnet.
 
-=head2 $subnet->netmask_as_integer()
+=head2 $network->netmask_as_integer()
 
 Returns the numeric subnet as passed to the constructor.
 
-=head2 $subnet->mask_length()
+=head2 $network->mask_length()
 
 Returns the mask length for the subnet, which is either 32 (IPv4) or 128
 (IPv6).
 
-=head2 $subnet->max_netmask_as_integer()
+=head2 $network->max_netmask_as_integer()
 
 This returns the maximum possible numeric subnet that this subnet could fit
 in. In other words, the 1.1.1.0/32 subnet could be part of the 1.1.1.0/24
 subnet, so this returns 24.
 
-=head2 $subnet->first()
+=head2 $network->first()
 
 Returns the first IP in the subnet as an L<Net::Works::Address> object.
 
-=head2 $subnet->last()
+=head2 $network->last()
 
 Returns the last IP in the subnet as an L<Net::Works::Address> object.
 
-=head2 $subnet->iterator()
+=head2 $network->iterator()
 
 This returns an anonymous sub that returns one IP address in the range each
 time it's called.
