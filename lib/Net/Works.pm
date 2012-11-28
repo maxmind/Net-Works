@@ -13,7 +13,7 @@ API design is a bit crufty. This distro provides wrappers around
 L<NetAddr::IP> that aim to address the biggest problems with that module's
 API, as well as adding some additional features.
 
-This distro contains two module, L<Net::Works::Address> and
+This distro contains two modules, L<Net::Works::Address> and
 L<Net::Works::Network>.
 
 =head1 BIG INTEGERS
