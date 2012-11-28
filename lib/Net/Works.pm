@@ -8,9 +8,10 @@ __END__
 
 =head1 DESCRIPTION
 
-This distribution provides a sane (in my opinion) API for dealing with IP
-addresses. It currently wraps L<NetAddr::IP>, which is the most feature
-complete module for IP addresses & networks on CPAN, but provides a saner API.
+The L<NetAddr::IP> module is very complete, correct, and useful. However, it's
+API design is a bit crufty. This distro provides wrappers around
+L<NetAddr::IP> that aim to address the biggest problems with that module's
+API, as well as adding some additional features.
 
 This distro contains two module, L<Net::Works::Address> and
 L<Net::Works::Network>.
