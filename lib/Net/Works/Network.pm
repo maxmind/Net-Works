@@ -4,9 +4,6 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-# We don't want the pure Perl implementation - it's slow
-use Math::BigInt::GMP;
-
 use List::AllUtils qw( any first );
 use Net::Works::Address;
 use NetAddr::IP;

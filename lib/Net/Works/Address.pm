@@ -3,9 +3,6 @@ package Net::Works::Address;
 use strict;
 use warnings;
 
-# We don't want the pure Perl implementation - it's slow
-use Math::BigInt::GMP;
-
 use Carp qw( confess );
 use NetAddr::IP::Util qw( inet_any2n );
 use NetAddr::IP;
