@@ -8,7 +8,7 @@ __END__
 
 =head1 DESCRIPTION
 
-The L<NetAddr::IP> module is very complete, correct, and useful. However, it's
+The L<NetAddr::IP> module is very complete, correct, and useful. However, its
 API design is a bit crufty. This distro provides wrappers around
 L<NetAddr::IP> that aim to address the biggest problems with that module's
 API, as well as adding some additional features.
