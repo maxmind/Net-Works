@@ -395,10 +395,3 @@ It also excludes any reserved subnets in the range (such as the 10.0.0.0/8 or
 
 This method works with both IPv4 and IPv6 addresses. If either address
 contains a colon (:) then it assumes that you want IPv6 subnets.
-
-=head1 SUPPORT
-
-Please report any bugs or feature requests to C<bug-net-sweet@rt.cpan.org>, or
-through the web interface at L<http://rt.cpan.org>. I will be notified, and
-then you'll automatically be notified of progress on your bug as I make
-changes.

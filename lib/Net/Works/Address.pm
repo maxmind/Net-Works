@@ -271,10 +271,3 @@ This class overloads numeric comparison, allowing you to compare two objects
 numerically and to sort them.
 
 It also overloads stringification to call the C<< $ip->as_string() >> method.
-
-=head1 SUPPORT
-
-Please report any bugs or feature requests to C<bug-net-sweet@rt.cpan.org>, or
-through the web interface at L<http://rt.cpan.org>. I will be notified, and
-then you'll automatically be notified of progress on your bug as I make
-changes.
