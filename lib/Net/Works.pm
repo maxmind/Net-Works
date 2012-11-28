@@ -38,7 +38,7 @@ a /32 or /128 subnet.
 =item * Multiple constructors
 
 L<Net::Works> allows you to construct an IP address from a string ("1.2.3.4")
-or an integer (1097).
+or an integer (1097) using separate constructors.
 
 =item * Next & previous IP
 
