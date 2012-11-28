@@ -1,8 +1,8 @@
 use strict;
 use warnings;
 
-use Test::Most;
-bail_on_fail;
+use Test::More 0.88;
+
 use List::AllUtils qw( each_array );
 use Net::Works::Network;
 

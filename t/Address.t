@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Test::Fatal;
-use Test::More;
+use Test::More 0.88;
 
 use Net::Works::Address;
 
