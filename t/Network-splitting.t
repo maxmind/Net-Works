@@ -5,7 +5,6 @@ use Test::Most;
 bail_on_fail;
 use List::AllUtils qw( each_array );
 use Net::Works::Network;
-use Net::IP qw( ip_bintoip ip_inttobin );
 
 {
     _test_remove_reserved_subnets(
