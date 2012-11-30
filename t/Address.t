@@ -211,7 +211,7 @@ use Net::Works::Address;
 
     is(
         $ip->as_string(),
-        '::ffff:ffff',
+        '::255.255.255.255',
         'new_from_integer(2**32 - 1), IPv6'
     );
 
