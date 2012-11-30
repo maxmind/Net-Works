@@ -4,20 +4,21 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
+use Data::Validate::IP qw(is_ipv4 is_ipv6);
 use List::AllUtils qw( any first );
+use Math::BigInt try => 'GMP';
 use Net::Works::Address;
-use NetAddr::IP;
+use NetAddr::IP::Util qw(inet_any2n);
+use Socket qw(inet_pton inet_ntoa AF_INET AF_INET6);
+
+#Floats are a huge pain
+use integer;
 
 use Moose;
 
-has _netmask => (
-    is      => 'ro',
-    isa     => 'NetAddr::IP',
-    handles => {
-        netmask_as_integer => 'masklen',
-        mask_length        => 'bits',
-        version            => 'version',
-    },
+has version => (
+    is  => 'ro',
+    isa => 'Int',
 );
 
 has first => (
@@ -36,46 +37,99 @@ has last => (
     builder  => '_build_last',
 );
 
+has netmask_as_integer => (
+    is  => 'ro',
+    isa => 'Int',
+);
+
+has _address_string => (
+    is  => 'ro',
+    isa => 'Str',
+);
+
+has _address_integer => (
+    is => 'ro',
+
+    # This need to handle Int and BigInt
+    #    isa     => 'Int',
+    lazy    => 1,
+    builder => '_build_address_integer'
+);
+
+has _subnet_integer => (
+    is => 'ro',
+
+    # This need to handle Int and BigInt
+    #    isa     => 'Int',
+    lazy    => 1,
+    builder => '_build_subnet_integer',
+);
+
 override BUILDARGS => sub {
     my $self = shift;
 
     my $p = super();
 
-    my $constructor = $p->{version} && $p->{version} == 6 ? 'new6' : 'new';
+    my ( $address, $masklen ) = split '/', $p->{subnet};
 
-    my $nm = NetAddr::IP->$constructor( $p->{subnet} )
-        or die "Invalid subnet specifier - [$p->{subnet}]";
+    my $version = $p->{version} ? $p->{version} : is_ipv6($address) ? 6 : 4;
 
-    return { _netmask => $nm };
+    return {
+        _address_string    => $address,
+        netmask_as_integer => $masklen, version => $version
+    };
 };
 
-{
-    my %max = (
-        32  => 2**32 - 1,
-        128 => do { use bigint; 2**128 - 1 },
-    );
+sub _build_address_integer {
+    my $self = shift;
 
-    sub max_netmask_as_integer {
-        my $self = shift;
-
-        my $base = $self->first()->as_integer();
-
-        my $netmask = $self->netmask_as_integer();
-
-        my $bits = $self->_netmask()->bits();
-        while ($netmask) {
-            my $mask = do {
-                use bigint;
-                ( ~( 2**( $bits - $netmask ) - 1 ) & $max{$bits} );
-            };
-
-            last if ( $base & $mask ) != $base;
-
-            $netmask--;
-        }
-
-        return $netmask + 1;
+    if ( $self->version == 4 ) {
+        return unpack 'N', inet_pton( AF_INET, $self->_address_string );
     }
+    else {
+        # Fix
+        return Net::Works::Address->new_from_string(
+            string => $self->_address_string )->as_integer;
+    }
+}
+
+sub _bits { $_[0]->version == 6 ? 128 : 32 }
+sub mask_length { $_[0]->_bits }
+
+sub _max {
+    $_[0]->version == 4
+        ? 0xFFFFFFFF
+        : Math::BigInt->from_hex('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF');
+}
+
+sub _build_subnet_integer {
+    my $self = shift;
+    my $bits = $self->_bits;
+
+    return $self->_max
+        & ( $self->_max << ( $bits - $self->netmask_as_integer ) );
+}
+
+sub max_netmask_as_integer {
+    my $self = shift;
+
+    my $base = $self->first()->as_integer();
+
+    my $netmask = $self->netmask_as_integer();
+
+    my $bits = $self->_bits;
+    while ($netmask) {
+        my $mask = do {
+            my $two = Math::BigInt->new(2);
+            ( ~( $two**( $bits - $netmask ) - 1 ) & $self->_max );
+        };
+
+        last if ( $base & $mask ) != $base;
+
+        $netmask--;
+    }
+
+    return $netmask + 1;
 }
 
 sub iterator {
@@ -98,27 +152,25 @@ sub iterator {
 sub as_string {
     my $self = shift;
 
-    my $netmask = $self->_netmask();
-
-    return $self->version() == 6
-        ? ( join '/', lc $netmask->short(), $netmask->masklen() )
-        : $netmask->cidr();
+    return join '/', lc $self->_address_string(), $self->netmask_as_integer();
 }
 
 sub _build_first {
     my $self = shift;
 
     return Net::Works::Address->new_from_string(
-        string  => $self->_netmask()->network()->addr(),
+        string  => $self->_address_string,
         version => $self->version(),
     );
 }
 
 sub _build_last {
-    my $self = shift;
+    my $self      = shift;
+    my $broadcast = $self->_max
+        & ( $self->_address_integer | ( ~$self->_subnet_integer ) );
 
-    return Net::Works::Address->new_from_string(
-        string  => $self->_netmask()->broadcast()->addr(),
+    return Net::Works::Address->new_from_integer(
+        integer => $broadcast,
         version => $self->version(),
     );
 }
@@ -271,11 +323,10 @@ sub _max_subnet {
     my $ipnum   = $ip->as_integer;
     my $max     = $maxip->as_integer;
     my $version = $ip->version();
-    my $bits    = $version == 6 ? 128 : 32;
+    my $masklen = $version == 6 ? 128 : 32;
 
-    my $masklen      = $bits;
-    my $v            = $ipnum;
-    my $reverse_mask = $version == 6 ? do { use bigint; 1 } : 1;
+    my $v = $ipnum;
+    my $reverse_mask = $version == 6 ? Math::BigInt->new(1) : 1;
 
     while (( $v & 1 ) == 0
         && $masklen > 0
