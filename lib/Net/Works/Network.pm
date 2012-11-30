@@ -254,19 +254,7 @@ sub _split_one_range {
 
     my @subnets;
     while ( $first <= $last ) {
-        my $smallest_subnet = Net::Works::Network->new(
-            subnet  => $first . '/' . $bits,
-            version => $version,
-        );
-
-        my $max_network = first { $_->last() <= $last } (
-            map {
-                Net::Works::Network->new(
-                    subnet  => $first . '/' . $_,
-                    version => $version,
-                    )
-            } $smallest_subnet->max_netmask_as_integer() .. $bits
-        );
+        my $max_network = _max_subnet( $first, $last );
 
         push @subnets, $max_network;
 
@@ -274,6 +262,35 @@ sub _split_one_range {
     }
 
     return @subnets;
+}
+
+sub _max_subnet {
+    my $ip    = shift;
+    my $maxip = shift;
+
+    my $ipnum   = $ip->as_integer;
+    my $max     = $maxip->as_integer;
+    my $version = $ip->version();
+    my $bits    = $version == 6 ? 128 : 32;
+
+    my $masklen      = $bits;
+    my $v            = $ipnum;
+    my $reverse_mask = $version == 6 ? do { use bigint; 1 } : 1;
+
+    while (( $v & 1 ) == 0
+        && $masklen > 0
+        && ( $ipnum | $reverse_mask ) <= $max ) {
+
+        $masklen--;
+        $v = $v >> 1;
+
+        $reverse_mask = ( $reverse_mask << 1 ) | 1;
+    }
+
+    return Net::Works::Network->new(
+        subnet  => $ip . '/' . $masklen,
+        version => $version,
+    );
 }
 
 __PACKAGE__->meta()->make_immutable();
