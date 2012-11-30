@@ -26,7 +26,7 @@ use Moose;
 
 with 'Net::Works::Role::IP';
 
-has _as_integer => (
+has as_integer => (
     is => 'ro',
 
     #    isa      => 'Int',
@@ -50,7 +50,7 @@ sub new_from_string {
     my $version = delete $p{version};
     $version ||= is_ipv4($str) ? 4 : 6;
 
-    return $class->new( _as_integer => $int, version => $version, %p );
+    return $class->new( as_integer => $int, version => $version, %p );
 }
 
 sub new_from_integer {
@@ -63,21 +63,15 @@ sub new_from_integer {
 
     $int = Math::BigInt->new($int) if $version == 6;
 
-    return $class->new( _as_integer => $int, version => $version, %p );
+    return $class->new( as_integer => $int, version => $version, %p );
 }
 
 sub as_string {
     my $self = shift;
 
     return $self->version() == 6
-        ? inet_ntop AF_INET6, bcd2bin( $self->_as_integer )
-        : inet_ntop AF_INET, pack( 'N', $self->_as_integer );
-}
-
-sub as_integer {
-    my $self = shift;
-
-    return $self->_as_integer;
+        ? inet_ntop AF_INET6, bcd2bin( $self->as_integer )
+        : inet_ntop AF_INET, pack( 'N', $self->as_integer );
 }
 
 sub as_binary {
