@@ -104,10 +104,15 @@ sub _max {
 
 sub _build_subnet_integer {
     my $self = shift;
-    my $bits = $self->_bits;
 
-    return $self->_max
-        & ( $self->_max << ( $bits - $self->netmask_as_integer ) );
+    return $self->_mask_length_to_mask( $self->netmask_as_integer );
+}
+
+sub _mask_length_to_mask {
+    my $self    = shift;
+    my $masklen = shift;
+
+    return $self->_max & ( $self->_max << ( $self->_bits - $masklen ) );
 }
 
 sub max_netmask_as_integer {
@@ -119,10 +124,7 @@ sub max_netmask_as_integer {
 
     my $bits = $self->_bits;
     while ($netmask) {
-        my $mask = do {
-            my $two = Math::BigInt->new(2);
-            ( ~( $two**( $bits - $netmask ) - 1 ) & $self->_max );
-        };
+        my $mask = $self->_mask_length_to_mask($netmask);
 
         last if ( $base & $mask ) != $base;
 
