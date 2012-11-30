@@ -18,7 +18,7 @@ use integer;
 #use namespace::autoclean;
 
 use overload (
-    q{""} => 'as_string',
+    q{""} => '_overloaded_as_string',
     '<=>' => '_compare_overload',
 );
 
@@ -31,6 +31,13 @@ has as_integer => (
 
     #    isa      => 'Int',
     required => 1,
+);
+
+has as_string => (
+is => 'ro',
+isa => 'Str',
+lazy => 1,
+builder => '_build_as_string',
 );
 
 has version => (
@@ -66,13 +73,16 @@ sub new_from_integer {
     return $class->new( as_integer => $int, version => $version, %p );
 }
 
-sub as_string {
+sub _build_as_string {
     my $self = shift;
 
     return $self->version() == 6
         ? inet_ntop AF_INET6, bcd2bin( $self->as_integer )
         : inet_ntop AF_INET, pack( 'N', $self->as_integer );
 }
+
+# not sure why this is needed
+sub _overloaded_as_string { $_[0]->as_string }
 
 sub as_binary {
     my $self = shift;
