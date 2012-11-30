@@ -8,8 +8,7 @@ use Data::Validate::IP qw(is_ipv4 is_ipv6);
 use List::AllUtils qw( any first );
 use Math::BigInt try => 'GMP';
 use Net::Works::Address;
-use NetAddr::IP::Util qw(inet_any2n bin2bcd);
-use Socket qw(inet_pton inet_ntoa AF_INET AF_INET6);
+use NetAddr::IP::Util qw(inet_any2n);
 
 #Floats are a huge pain
 use integer;
@@ -52,7 +51,7 @@ has _address_string => (
 has _address_integer => (
     is => 'ro',
 
-    # This need to handle Int and BigInt
+    # This needs to handle Int and BigInt
     #    isa     => 'Int',
     lazy    => 1,
     builder => '_build_address_integer'
@@ -61,7 +60,7 @@ has _address_integer => (
 has _subnet_integer => (
     is => 'ro',
 
-    # This need to handle Int and BigInt
+    # This needs to handle Int and BigInt
     #    isa     => 'Int',
     lazy    => 1,
     builder => '_build_subnet_integer',
@@ -89,8 +88,7 @@ override BUILDARGS => sub {
 sub _build_address_integer {
     my $self = shift;
 
-    return Net::Works::Address->new_from_string(
-        string => $self->_address_string )->as_integer;
+    return _string_to_integer($self->_address_string);
 }
 
 sub _bits { $_[0]->version == 6 ? 128 : 32 }

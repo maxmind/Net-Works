@@ -10,6 +10,8 @@ use NetAddr::IP::Util qw( inet_any2n bin2bcd bcd2bin ipv6_n2x );
 use Scalar::Util qw( blessed );
 use Socket qw(AF_INET AF_INET6 inet_pton inet_ntop);
 
+use integer;
+
 # Using this currently breaks overloading - see
 # https://rt.cpan.org/Ticket/Display.html?id=50938
 #
@@ -37,19 +39,6 @@ has version => (
     #isa => 'Int',
     required => 1,
 );
-
-# FIX - should be shared
-sub _string_to_integer {
-    my $address = shift;
-
-    if ( is_ipv4($address) ) {
-        return unpack 'N', inet_pton( AF_INET, $address );
-    }
-    else {
-        return Math::BigInt->new(
-            bin2bcd( inet_pton( AF_INET6, $address ) ) );
-    }
-}
 
 sub new_from_string {
     my $class = shift;
