@@ -152,8 +152,9 @@ sub as_string {
 sub _build_first {
     my $self = shift;
 
-    return Net::Works::Address->new_from_string(
-        string  => $self->_address_string,
+    # FIX - I assume this is incorrect even though it passes the tests
+    return Net::Works::Address->new_from_integer(
+        integer  => $self->_address_integer,
         version => $self->version(),
     );
 }
