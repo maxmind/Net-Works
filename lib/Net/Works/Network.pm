@@ -74,6 +74,10 @@ override BUILDARGS => sub {
 
     my $version = $p->{version} ? $p->{version} : is_ipv6($address) ? 6 : 4;
 
+    if ( $version == 6 && is_ipv4($address) ) {
+        $masklen += 96;
+    }
+
     return {
         _address_string    => $address,
         netmask_as_integer => $masklen, version => $version
@@ -167,9 +171,9 @@ sub _build_first {
 }
 
 sub _build_last {
-    my $self      = shift;
-    my $broadcast = $self->_max
-        & ( $self->_address_integer | ( ~$self->_subnet_integer ) );
+    my $self = shift;
+    my $broadcast
+        = $self->_address_integer | ( $self->_max & ~$self->_subnet_integer );
 
     return Net::Works::Address->new_from_integer(
         integer => $broadcast,
@@ -303,8 +307,6 @@ sub _split_one_range {
     my $last  = shift;
 
     my $version = $first->version();
-
-    my $bits = $version == 6 ? 128 : 32;
 
     my @subnets;
     while ( $first <= $last ) {
