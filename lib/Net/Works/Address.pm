@@ -22,6 +22,8 @@ use overload (
 
 use Moose;
 
+with 'Net::Works::Role::IP';
+
 has _as_integer => (
     is => 'ro',
 
@@ -131,7 +133,7 @@ sub next_ip {
 
     my $bits = $self->mask_length();
     confess "$self is the last address in its range"
-        if $self->as_integer() == do { use bigint; ( 2**$bits - 1 ) };
+        if $self->as_integer() == $self->_max;
 
     return __PACKAGE__->new_from_integer(
         integer => $self->as_integer() + 1,

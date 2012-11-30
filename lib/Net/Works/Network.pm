@@ -16,6 +16,8 @@ use integer;
 
 use Moose;
 
+with 'Net::Works::Role::IP';
+
 has version => (
     is  => 'ro',
     isa => 'Int',
@@ -93,12 +95,6 @@ sub _build_address_integer {
 
 sub _bits { $_[0]->version == 6 ? 128 : 32 }
 sub mask_length { $_[0]->_bits }
-
-sub _max {
-    $_[0]->version == 4
-        ? 0xFFFFFFFF
-        : Math::BigInt->from_hex('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF');
-}
 
 sub _build_subnet_integer {
     my $self = shift;
