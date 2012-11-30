@@ -4,9 +4,11 @@ use strict;
 use warnings;
 
 use Carp qw( confess );
-use NetAddr::IP::Util qw( inet_any2n );
-use NetAddr::IP;
+use Data::Validate::IP qw(is_ipv4);
+use Math::BigInt try => 'GMP';
+use NetAddr::IP::Util qw( inet_any2n bin2bcd bcd2bin ipv6_n2x );
 use Scalar::Util qw( blessed );
+use Socket qw(AF_INET AF_INET6 inet_pton inet_ntop);
 
 # Using this currently breaks overloading - see
 # https://rt.cpan.org/Ticket/Display.html?id=50938
@@ -20,57 +22,71 @@ use overload (
 
 use Moose;
 
-has _ip => (
-    is      => 'ro',
-    isa     => 'NetAddr::IP',
-    handles => {
-        version     => 'version',
-        mask_length => 'bits',
-    },
+has _as_integer => (
+    is => 'ro',
+
+    #    isa      => 'Int',
+    required => 1,
 );
 
-override BUILDARGS => sub {
-    my $class = shift;
+has version => (
+    is => 'ro',
 
-    my $p = super();
+    #isa => 'Int',
+    required => 1,
+);
 
-    my $ip
-        = $p->{_ip} // ( $p->{version} && $p->{version} == 6 )
-        ? NetAddr::IP->new6( $p->{address} )
-        : NetAddr::IP->new( $p->{address} )
-        or die "Invalid address: $p->{address}";
+# FIX - should be shared
+sub _string_to_integer {
+    my $address = shift;
 
-    return { _ip => $ip };
-};
+    if ( is_ipv4($address) ) {
+        return unpack 'N', inet_pton( AF_INET, $address );
+    }
+    else {
+        return Math::BigInt->new(
+            bin2bcd( inet_pton( AF_INET6, $address ) ) );
+    }
+}
 
 sub new_from_string {
     my $class = shift;
     my %p     = @_;
 
-    return $class->new( address => delete $p{string}, %p );
+    my $str = delete $p{string};
+    my $int = _string_to_integer($str);
+
+    my $version = delete $p{version};
+    $version ||= is_ipv4($str) ? 4 : 6;
+
+    return $class->new( _as_integer => $int, version => $version, %p );
 }
 
 sub new_from_integer {
     my $class = shift;
     my %p     = @_;
 
-    return $class->new( address => delete $p{integer}, %p );
+    my $int     = delete $p{integer};
+    my $version = delete $p{version};
+    $version ||= ref $int ? 6 : 4;
+
+    $int = Math::BigInt->new($int) if $version == 6;
+
+    return $class->new( _as_integer => $int, version => $version, %p );
 }
 
 sub as_string {
     my $self = shift;
 
     return $self->version() == 6
-        ? lc $self->_ip()->short()
-        : $self->_ip()->addr();
+        ? inet_ntop AF_INET6, bcd2bin( $self->_as_integer )
+        : inet_ntop AF_INET, pack( 'N', $self->_as_integer );
 }
 
 sub as_integer {
     my $self = shift;
 
-    return $self->version() == 4
-        ? ( scalar $self->_ip()->numeric() ) + 0
-        : scalar $self->_ip()->bigint();
+    return $self->_as_integer;
 }
 
 sub as_binary {
@@ -98,7 +114,7 @@ sub as_bit_string {
     my $self = shift;
 
     if ( $self->version == 6 ) {
-        my $bin = $self->as_integer()->as_bin();
+        my $bin = $self->as_integer->as_bin();
 
         $bin =~ s/^0b//;
         return sprintf( '%0128s', $bin );
@@ -107,6 +123,8 @@ sub as_bit_string {
         return sprintf( '%032b', $self->as_integer );
     }
 }
+
+sub mask_length { $_[0]->version == 6 ? 128 : 32 }
 
 sub next_ip {
     my $self = shift;
