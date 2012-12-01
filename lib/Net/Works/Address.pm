@@ -27,24 +27,23 @@ use Moose;
 with 'Net::Works::Role::IP';
 
 has as_integer => (
-    is => 'ro',
-
-    #    isa      => 'Int',
+    is       => 'ro',
+#    isa      => 'Int',
     required => 1,
 );
 
 has as_string => (
-is => 'ro',
-isa => 'Str',
-lazy => 1,
-builder => '_build_as_string',
+    is      => 'ro',
+    isa     => 'Str',
+    lazy    => 1,
+    builder => '_build_as_string',
 );
 
 has version => (
-    is => 'ro',
-
-    #isa => 'Int',
+    is       => 'ro',
+    isa      => 'Int',
     required => 1,
+    coerce   => 1,
 );
 
 sub new_from_string {
@@ -68,7 +67,12 @@ sub new_from_integer {
     my $version = delete $p{version};
     $version ||= ref $int ? 6 : 4;
 
-    $int = Math::BigInt->new($int) if $version == 6;
+    if ( $version == 6 && !ref($int) ) {
+        $int = Math::BigInt->new($int);
+    }
+    elsif ( $version == 4 && ref($int) ) {
+        $int = $int->numify;
+    }
 
     return $class->new( as_integer => $int, version => $version, %p );
 }

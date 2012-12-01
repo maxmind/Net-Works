@@ -11,6 +11,13 @@ use Socket qw(inet_pton AF_INET AF_INET6);
 
 use Moose::Role;
 
+# This is needed as Math::BigInts are sneaking in as Ints.
+# Maybe create a separate type library with an actual IP version type.
+use Moose::Util::TypeConstraints;
+class_type('Math::BigInt');
+# FIX - apparently type coercions are global
+coerce 'Int', from 'Math::BigInt', via { $_->numify };
+
 sub _max {
     $_[0]->version == 4
         ? 0xFFFFFFFF

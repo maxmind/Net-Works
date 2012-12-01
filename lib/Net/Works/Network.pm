@@ -10,7 +10,6 @@ use Math::BigInt try => 'GMP';
 use Net::Works::Address;
 use NetAddr::IP::Util qw(inet_any2n);
 
-#Floats are a huge pain
 use integer;
 
 use Moose;
@@ -18,8 +17,9 @@ use Moose;
 with 'Net::Works::Role::IP';
 
 has version => (
-    is  => 'ro',
-    isa => 'Int',
+    is     => 'ro',
+    isa    => 'Int',
+    coerce => 1,
 );
 
 has first => (
@@ -88,7 +88,7 @@ override BUILDARGS => sub {
 sub _build_address_integer {
     my $self = shift;
 
-    return _string_to_integer($self->_address_string);
+    return _string_to_integer( $self->_address_string );
 }
 
 sub _bits { $_[0]->version == 6 ? 128 : 32 }
@@ -154,7 +154,7 @@ sub _build_first {
 
     # FIX - I assume this is incorrect even though it passes the tests
     return Net::Works::Address->new_from_integer(
-        integer  => $self->_address_integer,
+        integer => $self->_address_integer,
         version => $self->version(),
     );
 }
