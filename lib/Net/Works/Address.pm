@@ -150,7 +150,6 @@ sub bits { $_[0]->version() == 6 ? 128 : 32 }
 sub next_ip {
     my $self = shift;
 
-    my $bits = $self->mask_length();
     confess "$self is the last address in its range"
         if $self->as_integer() == $self->_max;
 
