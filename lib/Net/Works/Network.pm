@@ -4,11 +4,12 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-use Data::Validate::IP qw(is_ipv4 is_ipv6);
-use List::AllUtils qw( any first );
+use Data::Validate::IP qw( is_ipv4 is_ipv6 );
+use List::AllUtils qw( any );
 use Math::BigInt try => 'GMP';
 use Net::Works::Address;
-use NetAddr::IP::Util qw(inet_any2n);
+use NetAddr::IP::Util qw(bin2bcd);
+use Socket qw( inet_pton AF_INET AF_INET6 );
 
 use integer;
 
@@ -49,14 +50,14 @@ has _address_string => (
 );
 
 has _address_integer => (
-    is => 'ro',
+    is      => 'ro',
     isa     => 'IPInt',
     lazy    => 1,
     builder => '_build_address_integer'
 );
 
 has _subnet_integer => (
-    is => 'ro',
+    is      => 'ro',
     isa     => 'IPInt',
     lazy    => 1,
     builder => '_build_subnet_integer',
@@ -71,9 +72,9 @@ override BUILDARGS => sub {
 
     my $version = $p->{version} ? $p->{version} : is_ipv6($address) ? 6 : 4;
 
-
     if ( $version == 6 && is_ipv4($address) ) {
         $masklen += 96;
+        $address = '::' . $address;
     }
 
     return {
@@ -85,7 +86,11 @@ override BUILDARGS => sub {
 sub _build_address_integer {
     my $self = shift;
 
-    return _string_to_integer( $self->_address_string );
+    my $packed = inet_pton( $self->address_family, $self->_address_string );
+
+    return $self->version == 4
+        ? unpack 'N', $packed
+        : Math::BigInt->new( bin2bcd($packed) );
 }
 
 sub _bits { $_[0]->version == 6 ? 128 : 32 }
@@ -215,15 +220,15 @@ sub _build_last {
             my $reserved_first = $pn->first();
             my $reserved_last  = $pn->last();
 
-            next if ( $reserved_last <= $first);
+            next if ( $reserved_last <= $first );
             last if ( $last < $reserved_first );
 
             push @ranges, [ $first, $reserved_first->previous_ip ]
                 if $first < $reserved_first;
 
-            if ($last <= $reserved_last) {
+            if ( $last <= $reserved_last ) {
                 $add_remaining = 0;
-                last
+                last;
             }
             $first = $reserved_last->next_ip;
 
