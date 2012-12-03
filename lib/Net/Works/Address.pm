@@ -51,17 +51,16 @@ sub new_from_string {
     my $class = shift;
     my %p     = @_;
 
-    my $str = delete $p{string};
-
+    my $str     = delete $p{string};
     my $version = delete $p{version};
 
-
-    my $is_ipv4 = is_ipv4($str) if !$version || $version == 6;
-    $version ||= $is_ipv4 ? 4 : 6;
-
-    # For some reason, we like to pass in IPv4 addresses with a version
-    # flag of 6
-    $str = '::' . $str if $version == 6 && $is_ipv4;
+    if ( is_ipv4($str) ) {
+        $version ||= 4;
+        $str = '::' . $str if $version == 6;
+    }
+    else {
+        $version ||= 6;
+    }
 
     my $family = $version == 6 ? AF_INET6 : AF_INET;
 
