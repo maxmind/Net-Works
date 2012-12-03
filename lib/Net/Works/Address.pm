@@ -287,6 +287,11 @@ Returns a 4 or 6 to indicate whether this is an IPv4 or IPv6 address.
 Returns the mask length for the IP address, which is either 32 (IPv4) or 128
 (IPv6).
 
+=head2 $ip->bits()
+
+An alias for C<< $ip->mask_length() >>. This helps make addresses & network
+objects interchangeable in some cases.
+
 =head2 $ip->next_ip()
 
 Returns the numerically next IP, regardless of whether or not it's in the same
