@@ -1,5 +1,13 @@
 package Net::Works;
 
+# This is a hack to let us test code that requires a specific Net::Works
+# version against the Net-Works git repo code, but without actually setting
+# the $VERSION variable.
+BEGIN {
+    $Net::Works::{VERSION} = \99
+        unless exists $Net::Works::{VERSION};
+}
+
 1;
 
 # ABSTRACT: Sane APIs for IP addresses and networks
