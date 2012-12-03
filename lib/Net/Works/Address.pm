@@ -26,10 +26,22 @@ use Moose;
 
 with 'Net::Works::Role::IP';
 
-has as_integer => (
-    is       => 'ro',
-#    isa      => 'Int',
+has as_binary => (
+    is => 'ro',
+
+    #FIX - isa what?
+    isa      => 'Defined',
     required => 1,
+);
+
+has as_integer => (
+    is => 'ro',
+
+    # FIX
+    #    isa     => 'Int',
+    lazy    => 1,
+    builder => '_build_as_integer',
+
 );
 
 has as_string => (
@@ -46,17 +58,27 @@ has version => (
     coerce   => 1,
 );
 
+has address_family => (
+    is      => 'ro',
+    isa     => 'Int',
+    lazy    => 1,
+    default => sub { $_[0]->version == 6 ? AF_INET6 : AF_INET },
+);
+
 sub new_from_string {
     my $class = shift;
     my %p     = @_;
 
     my $str = delete $p{string};
-    my $int = _string_to_integer($str);
 
     my $version = delete $p{version};
     $version ||= is_ipv4($str) ? 4 : 6;
+    my $family = $version == 6 ? AF_INET6 : AF_INET;
 
-    return $class->new( as_integer => $int, version => $version, %p );
+    return $class->new(
+        as_binary  => inet_pton( $family, $str ),
+        version => $version,           %p
+    );
 }
 
 sub new_from_integer {
@@ -67,31 +89,30 @@ sub new_from_integer {
     my $version = delete $p{version};
     $version ||= ref $int ? 6 : 4;
 
-    if ( $version == 6 && !ref($int) ) {
-        $int = Math::BigInt->new($int);
-    }
-    elsif ( $version == 4 && ref($int) ) {
+    if ( $version == 4 && ref($int) ) {
         $int = $int->numify;
     }
 
-    return $class->new( as_integer => $int, version => $version, %p );
+    my $packed = $version == 4 ? pack 'N', $int : bcd2bin($int);
+
+    return $class->new( as_binary => $packed, version => $version, %p );
 }
 
 sub _build_as_string {
     my $self = shift;
 
-    return $self->version() == 6
-        ? inet_ntop AF_INET6, bcd2bin( $self->as_integer )
-        : inet_ntop AF_INET, pack( 'N', $self->as_integer );
+    return inet_ntop $self->address_family, $self->as_binary;
 }
 
 # not sure why this is needed
 sub _overloaded_as_string { $_[0]->as_string }
 
-sub as_binary {
+sub _build_as_integer {
     my $self = shift;
 
-    return inet_any2n( $self->as_string );
+    return $self->version == 4
+        ? unpack 'N', $self->as_binary
+        : Math::BigInt->new( bin2bcd( $self->as_binary ) );
 }
 
 sub as_ipv4_string {
