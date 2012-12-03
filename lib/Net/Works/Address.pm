@@ -27,18 +27,14 @@ use Moose;
 with 'Net::Works::Role::IP';
 
 has as_binary => (
-    is => 'ro',
-
-    #FIX - isa what?
-    isa      => 'Defined',
+    is       => 'ro',
+    isa      => 'PackedBinary',
     required => 1,
 );
 
 has as_integer => (
-    is => 'ro',
-
-    # FIX
-    #    isa     => 'Int',
+    is      => 'ro',
+    isa     => 'IPInt',
     lazy    => 1,
     builder => '_build_as_integer',
 
@@ -53,7 +49,7 @@ has as_string => (
 
 has version => (
     is       => 'ro',
-    isa      => 'Int',
+    isa      => 'IPVersion',
     required => 1,
     coerce   => 1,
 );
@@ -76,8 +72,8 @@ sub new_from_string {
     my $family = $version == 6 ? AF_INET6 : AF_INET;
 
     return $class->new(
-        as_binary  => inet_pton( $family, $str ),
-        version => $version,           %p
+        as_binary => inet_pton( $family, $str ),
+        version   => $version,           %p
     );
 }
 

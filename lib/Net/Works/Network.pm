@@ -18,7 +18,7 @@ with 'Net::Works::Role::IP';
 
 has version => (
     is     => 'ro',
-    isa    => 'Int',
+    isa    => 'IPVersion',
     coerce => 1,
 );
 
@@ -50,18 +50,14 @@ has _address_string => (
 
 has _address_integer => (
     is => 'ro',
-
-    # This needs to handle Int and BigInt
-    #    isa     => 'Int',
+    isa     => 'IPInt',
     lazy    => 1,
     builder => '_build_address_integer'
 );
 
 has _subnet_integer => (
     is => 'ro',
-
-    # This needs to handle Int and BigInt
-    #    isa     => 'Int',
+    isa     => 'IPInt',
     lazy    => 1,
     builder => '_build_subnet_integer',
 );
@@ -74,6 +70,7 @@ override BUILDARGS => sub {
     my ( $address, $masklen ) = split '/', $p->{subnet};
 
     my $version = $p->{version} ? $p->{version} : is_ipv6($address) ? 6 : 4;
+
 
     if ( $version == 6 && is_ipv4($address) ) {
         $masklen += 96;
@@ -152,9 +149,10 @@ sub as_string {
 sub _build_first {
     my $self = shift;
 
-    # FIX - I assume this is incorrect even though it passes the tests
+    my $id = $self->_address_integer & $self->_subnet_integer;
+
     return Net::Works::Address->new_from_integer(
-        integer => $self->_address_integer,
+        integer => $id,
         version => $self->version(),
     );
 }
