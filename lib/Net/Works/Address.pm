@@ -6,7 +6,7 @@ use warnings;
 use Carp qw( confess );
 use Data::Validate::IP qw(is_ipv4);
 use Math::BigInt try => 'GMP';
-use NetAddr::IP::Util qw( inet_any2n bin2bcd bcd2bin ipv6_n2x );
+use NetAddr::IP::Util qw( bin2bcd bcd2bin ipv6_n2x );
 use Scalar::Util qw( blessed );
 use Socket qw(AF_INET AF_INET6 inet_pton inet_ntop);
 
@@ -45,20 +45,6 @@ has as_string => (
     isa     => 'Str',
     lazy    => 1,
     builder => '_build_as_string',
-);
-
-has version => (
-    is       => 'ro',
-    isa      => 'IPVersion',
-    required => 1,
-    coerce   => 1,
-);
-
-has address_family => (
-    is      => 'ro',
-    isa     => 'Int',
-    lazy    => 1,
-    default => sub { $_[0]->version == 6 ? AF_INET6 : AF_INET },
 );
 
 sub new_from_string {
@@ -140,7 +126,8 @@ sub as_bit_string {
     }
 }
 
-sub mask_length { $_[0]->version == 6 ? 128 : 32 }
+sub mask_length { $_[0]->bits }
+sub bits {  $_[0]->version == 6 ? 128 : 32 }
 
 sub next_ip {
     my $self = shift;

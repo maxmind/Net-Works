@@ -17,12 +17,6 @@ use Moose;
 
 with 'Net::Works::Role::IP';
 
-has version => (
-    is     => 'ro',
-    isa    => 'IPVersion',
-    coerce => 1,
-);
-
 has first => (
     is       => 'ro',
     isa      => 'Net::Works::Address',
@@ -39,9 +33,10 @@ has last => (
     builder  => '_build_last',
 );
 
-has netmask_as_integer => (
-    is  => 'ro',
-    isa => 'Int',
+has mask_length => (
+    is       => 'ro',
+    isa      => 'Int',
+    required => 1,
 );
 
 has _address_string => (
@@ -78,8 +73,8 @@ override BUILDARGS => sub {
     }
 
     return {
-        _address_string    => $address,
-        netmask_as_integer => $masklen, version => $version
+        _address_string => $address,
+        mask_length     => $masklen, version => $version
     };
 };
 
@@ -93,30 +88,29 @@ sub _build_address_integer {
         : Math::BigInt->new( bin2bcd($packed) );
 }
 
-sub _bits { $_[0]->version == 6 ? 128 : 32 }
-sub mask_length { $_[0]->_bits }
+sub bits { $_[0]->version == 6 ? 128 : 32 }
 
 sub _build_subnet_integer {
     my $self = shift;
 
-    return $self->_mask_length_to_mask( $self->netmask_as_integer );
+    return $self->_mask_length_to_mask( $self->mask_length );
 }
 
 sub _mask_length_to_mask {
     my $self    = shift;
     my $masklen = shift;
 
-    return $self->_max & ( $self->_max << ( $self->_bits - $masklen ) );
+    return $self->_max & ( $self->_max << ( $self->bits - $masklen ) );
 }
 
-sub max_netmask_as_integer {
+sub max_mask_length {
     my $self = shift;
 
     my $base = $self->first()->as_integer();
 
-    my $netmask = $self->netmask_as_integer();
+    my $netmask = $self->mask_length();
 
-    my $bits = $self->_bits;
+    my $bits = $self->bits;
     while ($netmask) {
         my $mask = $self->_mask_length_to_mask($netmask);
 
@@ -148,7 +142,7 @@ sub iterator {
 sub as_string {
     my $self = shift;
 
-    return join '/', lc $self->_address_string(), $self->netmask_as_integer();
+    return join '/', lc $self->_address_string(), $self->mask_length();
 }
 
 sub _build_first {
@@ -329,8 +323,8 @@ __END__
 
   my $network = Net::Works::Network->new( subnet => '1.0.0.0/24' );
   print $network->as_string();          # 1.0.0.0/28
-  print $network->netmask_as_integer(); # 24
-  print $network->mask_length();        # 32
+  print $network->mask_length();        # 28
+  print $network->bits();               # 32
   print $network->version();            # 4
 
   my $first = $network->first();
@@ -343,7 +337,7 @@ __END__
   while ( my $ip = $iterator->() ) { ... }
 
   my $network = Net::Works::Network->new( subnet => '1.0.0.4/32' );
-  print $network->max_netmask_as_integer(); # 30
+  print $network->max_mask_length(); # 30
 
   # All methods work with IPv4 and IPv6 subnets
   my $network = Net::Works::Network->new( subnet => 'a800:f000::/20' );
@@ -393,16 +387,16 @@ Returns a string representation of the subnet like "1.0.0.0/24" or
 
 Returns a 4 or 6 to indicate whether this is an IPv4 or IPv6 subnet.
 
-=head2 $network->netmask_as_integer()
+=head2 $network->mask_length()
 
 Returns the numeric subnet as passed to the constructor.
 
-=head2 $network->mask_length()
+=head2 $network->bits()
 
-Returns the mask length for the subnet, which is either 32 (IPv4) or 128
-(IPv6).
+Returns the number of bit of an address in the subnet, which is either 32
+(IPv4) or 128 (IPv6).
 
-=head2 $network->max_netmask_as_integer()
+=head2 $network->max_mask_length()
 
 This returns the maximum possible numeric subnet that this subnet could fit
 in. In other words, the 1.1.1.0/32 subnet could be part of the 1.1.1.0/24

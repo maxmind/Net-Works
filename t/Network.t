@@ -15,7 +15,7 @@ use Net::Works::Network;
     );
 
     is(
-        $net->netmask_as_integer(),
+        $net->mask_length(),
         28,
         'netmask is 28'
     );
@@ -63,7 +63,7 @@ use Net::Works::Network;
     );
 
     is(
-        $net->netmask_as_integer(),
+        $net->mask_length(),
         120,
         'netmask is 120',
     );
@@ -144,9 +144,9 @@ use Net::Works::Network;
         my $net = Net::Works::Network->new( subnet => $subnet );
 
         is(
-            $net->max_netmask_as_integer(),
+            $net->max_mask_length(),
             $tests{$subnet},
-            "max_netmask_as_integer for $subnet is $tests{$subnet}"
+            "max_mask_length for $subnet is $tests{$subnet}"
         );
     }
 }
