@@ -15,11 +15,15 @@ use Moose::Role;
 # Maybe create a separate type library with an actual IP version type.
 use Moose::Util::TypeConstraints;
 class_type('Math::BigInt');
+
 # FIX - apparently type coercions are global
 coerce 'Int', from 'Math::BigInt', via { $_->numify };
 
 sub _max {
-    $_[0]->version == 4
+    my $self = shift;
+    my $version = shift // $self->version;
+
+    return $version == 4
         ? 0xFFFFFFFF
         : Math::BigInt->from_hex('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF');
 }

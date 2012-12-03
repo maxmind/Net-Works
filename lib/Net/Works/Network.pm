@@ -170,24 +170,6 @@ sub _build_last {
     );
 }
 
-sub _remove_reserved_subnets_from_range {
-    my $class   = shift;
-    my $first   = shift;
-    my $last    = shift;
-    my $version = shift;
-
-    my @ranges;
-
-    $class->_remove_reserved_subnets_from_range_r(
-        $first,
-        $last,
-        $version,
-        \@ranges
-    );
-
-    return @ranges;
-}
-
 {
     my @reserved_4 = qw(
         10.0.0.0/8
@@ -211,51 +193,46 @@ sub _remove_reserved_subnets_from_range {
 
     my %reserved_networks = (
         4 => [
-            map { Net::Works::Network->new( subnet => $_, version => 4 ) }
+            sort { $a->first <=> $b->first }
+                map { Net::Works::Network->new( subnet => $_, version => 4 ) }
                 @reserved_4,
         ],
         6 => [
-            map { Net::Works::Network->new( subnet => $_, version => 6 ) }
+            sort { $a->first <=> $b->first }
+                map { Net::Works::Network->new( subnet => $_, version => 6 ) }
                 @reserved_6,
         ],
     );
 
-    sub _remove_reserved_subnets_from_range_r {
+    sub _remove_reserved_subnets_from_range {
         my $class   = shift;
         my $first   = shift;
         my $last    = shift;
         my $version = shift;
-        my $ranges  = shift;
+
+        my @ranges;
+        my $add_remaining = 1;
 
         for my $pn ( @{ $reserved_networks{$version} } ) {
             my $reserved_first = $pn->first();
             my $reserved_last  = $pn->last();
 
-            next if ( $last < $reserved_first || $first > $reserved_last );
+            next if ( $reserved_last <= $first);
+            last if ( $last < $reserved_first );
 
-            if ( $first >= $reserved_first and $last <= $reserved_last ) {
+            push @ranges, [ $first, $reserved_first->previous_ip ]
+                if $first < $reserved_first;
 
-                # just remove the range, it is completely in a reserved network
-                return;
+            if ($last <= $reserved_last) {
+                $add_remaining = 0;
+                last
             }
+            $first = $reserved_last->next_ip;
 
-            $class->_remove_reserved_subnets_from_range_r(
-                $first,
-                $reserved_first->previous_ip(),
-                $version,
-                $ranges,
-            ) if ( $first < $reserved_first );
-
-            $class->_remove_reserved_subnets_from_range_r(
-                $reserved_last->next_ip(),
-                $last,
-                $version,
-                $ranges,
-            ) if ( $last > $reserved_last );
-            return;
         }
+        push @ranges, [ $first, $last ] if $add_remaining;
 
-        push @{$ranges}, [ $first, $last ];
+        return @ranges;
     }
 }
 
