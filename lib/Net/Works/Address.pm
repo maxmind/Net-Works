@@ -7,6 +7,7 @@ use Carp qw( confess );
 use Data::Validate::IP qw( is_ipv4 );
 use Math::BigInt try => 'GMP,Pari,FastCalc';
 use NetAddr::IP::Util qw( bin2bcd bcd2bin ipv6_n2x );
+use Net::Works::Types qw( IPInt PackedBinary Str );
 use Scalar::Util qw( blessed );
 use Socket qw( AF_INET AF_INET6 inet_pton inet_ntop );
 
@@ -26,25 +27,28 @@ use Moose;
 
 with 'Net::Works::Role::IP';
 
-has as_binary => (
+has _binary => (
     is       => 'ro',
-    isa      => 'PackedBinary',
+    reader   => 'as_binary',
+    isa      => PackedBinary,
     required => 1,
 );
 
-has as_integer => (
+has _integer => (
     is      => 'ro',
-    isa     => 'IPInt',
+    reader  => 'as_integer',
+    isa     => IPInt,
     lazy    => 1,
-    builder => '_build_as_integer',
+    builder => '_build_integer',
 
 );
 
-has as_string => (
+has _string => (
     is      => 'ro',
-    isa     => 'Str',
+    reader  => 'as_string',
+    isa     => Str,
     lazy    => 1,
-    builder => '_build_as_string',
+    builder => '_build_string',
 );
 
 sub new_from_string {
@@ -65,7 +69,7 @@ sub new_from_string {
     my $family = $version == 6 ? AF_INET6 : AF_INET;
 
     return $class->new(
-        as_binary => inet_pton( $family, $str ),
+        _binary => inet_pton( $family, $str ),
         version   => $version,
         %p,
     );
@@ -86,13 +90,13 @@ sub new_from_integer {
     my $packed = $version == 4 ? pack( N => $int ) : bcd2bin($int);
 
     return $class->new(
-        as_binary => $packed,
-        version   => $version,
+        _binary => $packed,
+        version => $version,
         %p,
     );
 }
 
-sub _build_as_string {
+sub _build_string {
     my $self = shift;
 
     return inet_ntop( $self->address_family(), $self->as_binary() );
@@ -103,7 +107,7 @@ sub _overloaded_as_string {
     return $_[0]->as_string();
 }
 
-sub _build_as_integer {
+sub _build_integer {
     my $self = shift;
 
     return $self->version == 4

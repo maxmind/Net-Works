@@ -4,17 +4,30 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-use Moose::Util::TypeConstraints;
+use MooseX::Types -declare => [
+    qw(
+        BigInt
+        PackedBinary
+        IPInt
+        IPVersion
+        )
+];
 
-class_type('Math::BigInt');
+use MooseX::Types::Moose qw( Int Value );
 
-subtype 'PackedBinary'
-=> as 'Value';
+class_type BigInt, { class => 'Math::BigInt' };
 
-subtype 'IPInt'
-=> as 'Int|Math::BigInt';
+subtype PackedBinary,
+    as Value;
 
-subtype 'IPVersion'
-=> as 'Int';
+subtype IPInt,
+    as Int|BigInt;
 
-coerce 'IPVersion', from 'Math::BigInt', via { $_->numify };
+subtype IPVersion,
+    as Int;
+
+coerce IPVersion,
+    from BigInt,
+    via { $_->numify() };
+
+1;

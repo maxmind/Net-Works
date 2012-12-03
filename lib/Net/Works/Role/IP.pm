@@ -5,21 +5,21 @@ use warnings;
 use namespace::autoclean;
 
 use Math::BigInt try => 'GMP,Pari,FastCalc';
-use Net::Works::Types::Internal;
+use Net::Works::Types qw( Int IPVersion );
 use Socket qw( AF_INET AF_INET6 );
 
 use Moose::Role;
 
 has version => (
     is       => 'ro',
-    isa      => 'IPVersion',
+    isa      => IPVersion,
     required => 1,
     coerce   => 1,
 );
 
 has address_family => (
     is      => 'ro',
-    isa     => 'Int',
+    isa     => Int,
     lazy    => 1,
     default => sub { $_[0]->version() == 6 ? AF_INET6 : AF_INET },
 );

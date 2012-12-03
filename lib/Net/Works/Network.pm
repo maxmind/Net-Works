@@ -8,6 +8,7 @@ use Data::Validate::IP qw( is_ipv4 is_ipv6 );
 use List::AllUtils qw( any );
 use Math::BigInt try => 'GMP,Pari,FastCalc';
 use Net::Works::Address;
+use Net::Works::Types qw( Int IPInt Str );
 use NetAddr::IP::Util qw( bin2bcd );
 use Socket qw( inet_pton AF_INET AF_INET6 );
 
@@ -35,27 +36,29 @@ has last => (
 
 has mask_length => (
     is       => 'ro',
-    isa      => 'Int',
+    isa      => Int,
     required => 1,
 );
 
 has _address_string => (
     is  => 'ro',
-    isa => 'Str',
+    isa => Str,
 );
 
 has _address_integer => (
-    is      => 'ro',
-    isa     => 'IPInt',
-    lazy    => 1,
-    builder => '_build_address_integer'
+    is       => 'ro',
+    isa      => IPInt,
+    init_arg => undef,
+    lazy     => 1,
+    builder  => '_build_address_integer'
 );
 
 has _subnet_integer => (
-    is      => 'ro',
-    isa     => 'IPInt',
-    lazy    => 1,
-    builder => '_build_subnet_integer',
+    is       => 'ro',
+    isa      => IPInt,
+    init_arg => undef,
+    lazy     => 1,
+    builder  => '_build_subnet_integer',
 );
 
 override BUILDARGS => sub {
@@ -74,7 +77,8 @@ override BUILDARGS => sub {
 
     return {
         _address_string => $address,
-        mask_length     => $masklen, version => $version
+        mask_length     => $masklen,
+        version         => $version,
     };
 };
 
