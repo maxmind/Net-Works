@@ -21,17 +21,21 @@ has address_family => (
     is      => 'ro',
     isa     => 'Int',
     lazy    => 1,
-    default => sub { $_[0]->version == 6 ? AF_INET6 : AF_INET },
+    default => sub { $_[0]->version() == 6 ? AF_INET6 : AF_INET },
 );
 
+{
+    my %max = (
+        4 => 0xFFFFFFFF,
+        6 => Math::BigInt->from_hex('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'),
+    );
 
-sub _max {
-    my $self = shift;
-    my $version = shift // $self->version;
+    sub _max {
+        my $self = shift;
+        my $version = shift // $self->version();
 
-    return $version == 4
-        ? 0xFFFFFFFF
-        : Math::BigInt->from_hex('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF');
+        return $max{$version};
+    }
 }
 
 1;

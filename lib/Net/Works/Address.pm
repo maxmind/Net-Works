@@ -4,11 +4,11 @@ use strict;
 use warnings;
 
 use Carp qw( confess );
-use Data::Validate::IP qw(is_ipv4);
+use Data::Validate::IP qw( is_ipv4 );
 use Math::BigInt try => 'GMP';
 use NetAddr::IP::Util qw( bin2bcd bcd2bin ipv6_n2x );
 use Scalar::Util qw( blessed );
-use Socket qw(AF_INET AF_INET6 inet_pton inet_ntop);
+use Socket qw( AF_INET AF_INET6 inet_pton inet_ntop );
 
 use integer;
 
@@ -66,7 +66,8 @@ sub new_from_string {
 
     return $class->new(
         as_binary => inet_pton( $family, $str ),
-        version   => $version,           %p
+        version   => $version,
+        %p,
     );
 }
 
@@ -82,15 +83,19 @@ sub new_from_integer {
         $int = $int->numify;
     }
 
-    my $packed = $version == 4 ? pack 'N', $int : bcd2bin($int);
+    my $packed = $version == 4 ? pack( N => $int ) : bcd2bin($int);
 
-    return $class->new( as_binary => $packed, version => $version, %p );
+    return $class->new(
+        as_binary => $packed,
+        version   => $version,
+        %p,
+    );
 }
 
 sub _build_as_string {
     my $self = shift;
 
-    return inet_ntop $self->address_family, $self->as_binary;
+    return inet_ntop( $self->address_family(), $self->as_binary() );
 }
 
 # not sure why this is needed
@@ -100,8 +105,8 @@ sub _build_as_integer {
     my $self = shift;
 
     return $self->version == 4
-        ? unpack 'N', $self->as_binary
-        : Math::BigInt->new( bin2bcd( $self->as_binary ) );
+        ? unpack( N => $self->as_binary() )
+        : Math::BigInt->new( bin2bcd( $self->as_binary() ) );
 }
 
 sub as_ipv4_string {
@@ -123,13 +128,13 @@ sub as_bit_string {
     my $self = shift;
 
     if ( $self->version == 6 ) {
-        my $bin = $self->as_integer->as_bin();
+        my $bin = $self->as_integer()->as_bin();
 
         $bin =~ s/^0b//;
         return sprintf( '%0128s', $bin );
     }
     else {
-        return sprintf( '%032b', $self->as_integer );
+        return sprintf( '%032b', $self->as_integer() );
     }
 }
 
@@ -145,7 +150,7 @@ sub next_ip {
 
     return __PACKAGE__->new_from_integer(
         integer => $self->as_integer() + 1,
-        version => $self->version()
+        version => $self->version(),
     );
 }
 

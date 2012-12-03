@@ -8,7 +8,7 @@ use Data::Validate::IP qw( is_ipv4 is_ipv6 );
 use List::AllUtils qw( any );
 use Math::BigInt try => 'GMP';
 use Net::Works::Address;
-use NetAddr::IP::Util qw(bin2bcd);
+use NetAddr::IP::Util qw( bin2bcd );
 use Socket qw( inet_pton AF_INET AF_INET6 );
 
 use integer;
@@ -81,10 +81,10 @@ override BUILDARGS => sub {
 sub _build_address_integer {
     my $self = shift;
 
-    my $packed = inet_pton( $self->address_family, $self->_address_string );
+    my $packed = inet_pton( $self->address_family(), $self->_address_string() );
 
     return $self->version == 4
-        ? unpack 'N', $packed
+        ? unpack( N => $packed )
         : Math::BigInt->new( bin2bcd($packed) );
 }
 
@@ -93,14 +93,14 @@ sub bits { $_[0]->version == 6 ? 128 : 32 }
 sub _build_subnet_integer {
     my $self = shift;
 
-    return $self->_mask_length_to_mask( $self->mask_length );
+    return $self->_mask_length_to_mask( $self->mask_length() );
 }
 
 sub _mask_length_to_mask {
     my $self    = shift;
     my $masklen = shift;
 
-    return $self->_max & ( $self->_max << ( $self->bits - $masklen ) );
+    return $self->_max() & ( $self->_max() << ( $self->bits - $masklen ) );
 }
 
 sub max_mask_length {
@@ -148,7 +148,7 @@ sub as_string {
 sub _build_first {
     my $self = shift;
 
-    my $id = $self->_address_integer & $self->_subnet_integer;
+    my $id = $self->_address_integer() & $self->_subnet_integer();
 
     return Net::Works::Address->new_from_integer(
         integer => $id,
@@ -158,8 +158,9 @@ sub _build_first {
 
 sub _build_last {
     my $self = shift;
+
     my $broadcast
-        = $self->_address_integer | ( $self->_max & ~$self->_subnet_integer );
+        = $self->_address_integer() | ( $self->_max() & ~$self->_subnet_integer() );
 
     return Net::Works::Address->new_from_integer(
         integer => $broadcast,
@@ -217,16 +218,17 @@ sub _build_last {
             next if ( $reserved_last <= $first );
             last if ( $last < $reserved_first );
 
-            push @ranges, [ $first, $reserved_first->previous_ip ]
+            push @ranges, [ $first, $reserved_first->previous_ip() ]
                 if $first < $reserved_first;
 
             if ( $last <= $reserved_last ) {
                 $add_remaining = 0;
                 last;
             }
-            $first = $reserved_last->next_ip;
 
+            $first = $reserved_last->next_ip();
         }
+
         push @ranges, [ $first, $last ] if $add_remaining;
 
         return @ranges;
@@ -287,8 +289,8 @@ sub _max_subnet {
     my $ip    = shift;
     my $maxip = shift;
 
-    my $ipnum   = $ip->as_integer;
-    my $max     = $maxip->as_integer;
+    my $ipnum   = $ip->as_integer();
+    my $max     = $maxip->as_integer();
     my $version = $ip->version();
     my $masklen = $version == 6 ? 128 : 32;
 
