@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-use Math::BigInt try => 'GMP';
+use Math::BigInt try => 'GMP,Pari,FastCalc';
 use Net::Works::Types::Internal;
 use Socket qw( AF_INET AF_INET6 );
 

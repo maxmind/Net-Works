@@ -5,7 +5,7 @@ use warnings;
 
 use Carp qw( confess );
 use Data::Validate::IP qw( is_ipv4 );
-use Math::BigInt try => 'GMP';
+use Math::BigInt try => 'GMP,Pari,FastCalc';
 use NetAddr::IP::Util qw( bin2bcd bcd2bin ipv6_n2x );
 use Scalar::Util qw( blessed );
 use Socket qw( AF_INET AF_INET6 inet_pton inet_ntop );

@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 use Data::Validate::IP qw( is_ipv4 is_ipv6 );
 use List::AllUtils qw( any );
-use Math::BigInt try => 'GMP';
+use Math::BigInt try => 'GMP,Pari,FastCalc';
 use Net::Works::Address;
 use NetAddr::IP::Util qw( bin2bcd );
 use Socket qw( inet_pton AF_INET AF_INET6 );
