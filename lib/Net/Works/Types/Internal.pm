@@ -12,10 +12,9 @@ subtype 'PackedBinary'
 => as 'Value';
 
 subtype 'IPInt'
-=> as 'Defined';
+=> as 'Int|Math::BigInt';
 
 subtype 'IPVersion'
-=> as 'Int|Math::BigInt'
-=> where { $_ == 4 || $_ == 6};
+=> as 'Int';
 
 coerce 'IPVersion', from 'Math::BigInt', via { $_->numify };
