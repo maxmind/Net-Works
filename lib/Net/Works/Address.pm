@@ -144,8 +144,8 @@ sub as_bit_string {
     }
 }
 
-sub mask_length { $_[0]->bits }
-sub bits {  $_[0]->version == 6 ? 128 : 32 }
+sub mask_length { $_[0]->bits() }
+sub bits { $_[0]->version() == 6 ? 128 : 32 }
 
 sub next_ip {
     my $self = shift;
