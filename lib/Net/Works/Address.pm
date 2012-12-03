@@ -54,7 +54,15 @@ sub new_from_string {
     my $str = delete $p{string};
 
     my $version = delete $p{version};
-    $version ||= is_ipv4($str) ? 4 : 6;
+
+
+    my $is_ipv4 = is_ipv4($str) if !$version || $version == 6;
+    $version ||= $is_ipv4 ? 4 : 6;
+
+    # For some reason, we like to pass in IPv4 addresses with a version
+    # flag of 6
+    $str = '::' . $str if $version == 6 && $is_ipv4;
+
     my $family = $version == 6 ? AF_INET6 : AF_INET;
 
     return $class->new(
@@ -238,8 +246,8 @@ you'll need to set the version explicitly to get an IPv6 address.
 
 =head2 $ip->as_string()
 
-Returns a string representation of the address like "1.2.3.4" or
-"ffff::a:1234".
+Returns a string representation of the address in the same format as
+inet_ntop, e.g., "1.2.3.4", "::1.2.3.4", or "ffff::a:1234".
 
 =head2 $ip->as_integer()
 
