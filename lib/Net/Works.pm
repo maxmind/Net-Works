@@ -16,6 +16,8 @@ API, as well as adding some additional features.
 This distro contains two modules, L<Net::Works::Address> and
 L<Net::Works::Network>.
 
+B<NOTE: This distro's APIs are still in flux. Use at your own risk.>
+
 =head1 BIG INTEGERS
 
 If you're using this module to work with IPv6 addresses, then you'll end up
