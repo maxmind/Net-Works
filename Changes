@@ -1,5 +1,24 @@
 {{$NEXT}}
 
+- All changes in this release come from Greg Oschwalrd.
+
+- Major internals rewrite to speed things up. We no longer wrap NetAddr::IP
+  objects (but we do use NetAddr::IP::Util).
+
+- Net::Works::Network->mask_length() now returns the mask as passed to the
+  constructor, not the number of bits in the mask. The ->bits method returns
+  the number of bits in the mask (32 or 128).
+
+- The Network->netmask_as_integer() method no longer exists (use mask_length()
+  instead). The ->max_netmask_as_integer() method has been renamed to
+  ->max_mask_length().
+
+- Added Net::Works::Address->mask_length() and ->bits() (which always return
+  the same thing).
+
+- We use Socket::inet_ntop to stringify addresses.
+
+
 0.01     2012-11-28
 
 - First release upon an unsuspecting world.
