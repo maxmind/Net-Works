@@ -98,8 +98,10 @@ sub _build_as_string {
     return inet_ntop( $self->address_family(), $self->as_binary() );
 }
 
-# not sure why this is needed
-sub _overloaded_as_string { $_[0]->as_string }
+# overload passes extra arguments to this sub for some reason
+sub _overloaded_as_string {
+    return $_[0]->as_string();
+}
 
 sub _build_as_integer {
     my $self = shift;
