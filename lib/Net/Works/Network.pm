@@ -379,42 +379,42 @@ This method takes a C<subnet> parameter and an optional C<version>
 parameter. The C<subnet> parameter should be a string representation of an IP
 address subnet.
 
-The C<version> parameter should be either C<4> or C<6>, but you don't really need
-this unless you're trying to force a dotted quad to be interpreted as an IPv6
-subnet or to a force an IPv6 address colon-separated hex number to be
-interpreted as an IPv4 subnet.
+The C<version> parameter should be either C<4> or C<6>, but you don't really
+need this unless you're trying to force a dotted quad to be interpreted as an
+IPv6 network or to a force an IPv6 address colon-separated hex number to be
+interpreted as an IPv4 network.
 
 =head2 $network->as_string()
 
-Returns a string representation of the subnet like "1.0.0.0/24" or
+Returns a string representation of the network like "1.0.0.0/24" or
 "a800:f000::/105".
 
 =head2 $network->version()
 
-Returns a 4 or 6 to indicate whether this is an IPv4 or IPv6 subnet.
+Returns a 4 or 6 to indicate whether this is an IPv4 or IPv6 network.
 
 =head2 $network->mask_length()
 
-Returns the numeric subnet as passed to the constructor.
+Returns the numeric network as passed to the constructor.
 
 =head2 $network->bits()
 
-Returns the number of bit of an address in the subnet, which is either 32
+Returns the number of bit of an address in the network, which is either 32
 (IPv4) or 128 (IPv6).
 
 =head2 $network->max_mask_length()
 
-This returns the maximum possible numeric subnet that this subnet could fit
+This returns the maximum possible numeric subnet that this network could fit
 in. In other words, the 1.1.1.0/32 subnet could be part of the 1.1.1.0/24
 subnet, so this returns 24.
 
 =head2 $network->first()
 
-Returns the first IP in the subnet as an L<Net::Works::Address> object.
+Returns the first IP in the network as an L<Net::Works::Address> object.
 
 =head2 $network->last()
 
-Returns the last IP in the subnet as an L<Net::Works::Address> object.
+Returns the last IP in the network as an L<Net::Works::Address> object.
 
 =head2 $network->iterator()
 
@@ -423,7 +423,7 @@ time it's called.
 
 For single address subnets (/32 or /128), this returns a single address.
 
-When it has exhausted all the addresses in the subnet, it returns C<undef>
+When it has exhausted all the addresses in the network, it returns C<undef>
 
 =head2 Net::Works::Network->range_as_subnets( $first, $last )
 
