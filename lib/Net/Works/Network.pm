@@ -328,8 +328,8 @@ __END__
 =head1 SYNOPSIS
 
   my $network = Net::Works::Network->new( subnet => '1.0.0.0/24' );
-  print $network->as_string();          # 1.0.0.0/28
-  print $network->mask_length();        # 28
+  print $network->as_string();          # 1.0.0.0/24
+  print $network->mask_length();        # 24
   print $network->bits();               # 32
   print $network->version();            # 4
 
@@ -359,7 +359,7 @@ __END__
 
 =head1 DESCRIPTION
 
-Objects of this class represent an IP address subnet. It can handle both IPv4
+Objects of this class represent an IP address network. It can handle both IPv4
 and IPv6 subnets. It provides various methods for getting information about
 the subnet.
 
