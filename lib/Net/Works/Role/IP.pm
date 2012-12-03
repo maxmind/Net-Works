@@ -38,4 +38,6 @@ has address_family => (
     }
 }
 
+sub bits { $_[0]->version() == 6 ? 128 : 32 }
+
 1;

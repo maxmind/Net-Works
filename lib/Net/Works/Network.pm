@@ -87,12 +87,10 @@ sub _build_address_integer {
 
     my $packed = inet_pton( $self->address_family(), $self->_address_string() );
 
-    return $self->version == 4
+    return $self->version() == 4
         ? unpack( N => $packed )
         : Math::BigInt->new( bin2bcd($packed) );
 }
-
-sub bits { $_[0]->version == 6 ? 128 : 32 }
 
 sub _build_subnet_integer {
     my $self = shift;
