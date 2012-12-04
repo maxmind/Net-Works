@@ -1,5 +1,11 @@
 {{$NEXT}}
 
+- Work around a bug in Data::Validate::IP's is_ipv6 sub. It doesn't think '::'
+  is a valid IPv6 address. If you created a Net::Works::Network object with
+  this address it would treat it as an IPv4 address unless you explicitly
+  specified the version.
+
+
 0.02     2012-12-03
 
 - All changes in this release come from Greg Oschwald.
