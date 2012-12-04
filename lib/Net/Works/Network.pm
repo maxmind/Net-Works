@@ -68,7 +68,7 @@ override BUILDARGS => sub {
 
     my ( $address, $masklen ) = split '/', $p->{subnet};
 
-    my $version = $p->{version} ? $p->{version} : is_ipv6($address) ? 6 : 4;
+    my $version = $p->{version} ? $p->{version} : _is_ipv6($address) ? 6 : 4;
 
     if ( $version == 6 && is_ipv4($address) ) {
         $masklen += 96;
@@ -81,6 +81,12 @@ override BUILDARGS => sub {
         version         => $version,
     };
 };
+
+# Data::Validate::IP does not think '::' is a valid IPv6 address -
+# https://rt.cpan.org/Ticket/Display.html?id=81700
+sub _is_ipv6 {
+    return $_[0] eq '::' || is_ipv6($_[0]);
+}
 
 sub _build_address_integer {
     my $self = shift;

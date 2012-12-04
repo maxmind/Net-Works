@@ -151,6 +151,16 @@ use Net::Works::Network;
     }
 }
 
+{
+    my $net = Net::Works::Network->new( subnet => '::/0' );
+
+    is( $net->as_string(), '::/0', 'got subnet passed to constructor' );
+    is(
+        $net->first()->as_string(), '::',
+        'first address in network is ::'
+    );
+}
+
 sub _test_iterator {
     my $net              = shift;
     my $expect_count     = shift;
