@@ -401,17 +401,33 @@ sub _test_remove_reserved_subnets {
     my $expect = shift;
 
     my $version = $range->[0] =~ /:/ ? 6 : 4;
-    my @got = Net::Works::Network->_remove_reserved_subnets_from_range(
-        Net::Works::Address->new_from_string(
-            string  => $range->[0],
-            version => $version,
-        ),
-        Net::Works::Address->new_from_string(
-            string  => $range->[1],
-            version => $version
-        ),
+
+    # All these conversions are gross but normally this is handled by the
+    # range_as_subnets method.
+    my $first = Net::Works::Address->new_from_string(
+        string  => $range->[0],
+        version => $version,
+    )->as_integer();
+
+    my $last = Net::Works::Address->new_from_string(
+        string  => $range->[1],
+        version => $version
+    )->as_integer();
+
+    my @got = map {
+        [
+            map {
+                Net::Works::Address->new_from_integer(
+                    integer => $_,
+                    version => $version
+                    )
+            } @{$_}
+        ]
+        } Net::Works::Network->_remove_reserved_subnets_from_range(
+        $first,
+        $last,
         $version,
-    );
+        );
 
     is_deeply(
         \@got,

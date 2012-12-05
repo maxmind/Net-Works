@@ -9,8 +9,8 @@ use List::AllUtils qw( any );
 use Math::BigInt try => 'GMP,Pari,FastCalc';
 use Net::Works::Address;
 use Net::Works::Types qw( Int IPInt Str );
-use NetAddr::IP::Util qw( bin2bcd );
-use Socket qw( inet_pton AF_INET AF_INET6 );
+use NetAddr::IP::Util qw( bcd2bin bin2bcd );
+use Socket qw( inet_ntop inet_pton AF_INET AF_INET6 );
 
 use integer;
 
@@ -199,12 +199,14 @@ sub _build_last {
 
     my %reserved_networks = (
         4 => [
-            sort { $a->first <=> $b->first }
+            map { [ $_->first()->as_integer(), $_->last()->as_integer() ] }
+                sort { $a->first <=> $b->first }
                 map { Net::Works::Network->new( subnet => $_, version => 4 ) }
                 @reserved_4,
         ],
         6 => [
-            sort { $a->first <=> $b->first }
+            map { [ $_->first()->as_integer(), $_->last()->as_integer() ] }
+                sort { $a->first <=> $b->first }
                 map { Net::Works::Network->new( subnet => $_, version => 6 ) }
                 @reserved_6,
         ],
@@ -220,13 +222,13 @@ sub _build_last {
         my $add_remaining = 1;
 
         for my $pn ( @{ $reserved_networks{$version} } ) {
-            my $reserved_first = $pn->first();
-            my $reserved_last  = $pn->last();
+            my $reserved_first = $pn->[0];
+            my $reserved_last  = $pn->[1];
 
             next if ( $reserved_last <= $first );
             last if ( $last < $reserved_first );
 
-            push @ranges, [ $first, $reserved_first->previous_ip() ]
+            push @ranges, [ $first, $reserved_first - 1 ]
                 if $first < $reserved_first;
 
             if ( $last <= $reserved_last ) {
@@ -234,7 +236,7 @@ sub _build_last {
                 last;
             }
 
-            $first = $reserved_last->next_ip();
+            $first = $reserved_last + 1;
         }
 
         push @ranges, [ $first, $last ] if $add_remaining;
@@ -261,53 +263,50 @@ sub range_as_subnets {
     ) unless ref $last;
 
     my @ranges = $class->_remove_reserved_subnets_from_range(
-        $first,
-        $last,
+        $first->as_integer(),
+        $last->as_integer(),
         $version
     );
 
     my @subnets;
     for my $range (@ranges) {
-        push @subnets, $class->_split_one_range( @{$range} );
+        push @subnets, $class->_split_one_range( @{$range}, $version );
     }
 
     return @subnets;
 }
 
 sub _split_one_range {
-    my $class = shift;
-    my $first = shift;
-    my $last  = shift;
-
-    my $version = $first->version();
+    my $class   = shift;
+    my $first   = shift;
+    my $last    = shift;
+    my $version = shift;
 
     my @subnets;
     while ( $first <= $last ) {
-        my $max_network = _max_subnet( $first, $last );
+        my $max_network = _max_subnet( $first, $last, $version );
 
         push @subnets, $max_network;
 
-        $first = $max_network->last()->next_ip();
+        $first = $max_network->last()->next_ip()->as_integer();
     }
 
     return @subnets;
 }
 
 sub _max_subnet {
-    my $ip    = shift;
-    my $maxip = shift;
+    my $ip      = shift;
+    my $maxip   = shift;
+    my $version = shift;
 
-    my $ipnum   = $ip->as_integer();
-    my $max     = $maxip->as_integer();
-    my $version = $ip->version();
     my $masklen = $version == 6 ? 128 : 32;
 
-    my $v = $ipnum;
+    my $v = $ip;
     my $reverse_mask = $version == 6 ? Math::BigInt->new(1) : 1;
 
     while (( $v & 1 ) == 0
         && $masklen > 0
-        && ( $ipnum | $reverse_mask ) <= $max ) {
+        && ( $ip | $reverse_mask ) <= $maxip ) {
 
         $masklen--;
         $v = $v >> 1;
@@ -315,8 +314,13 @@ sub _max_subnet {
         $reverse_mask = ( $reverse_mask << 1 ) | 1;
     }
 
+    my $address = inet_ntop(
+        ( $version == 6 ? AF_INET6 : AF_INET ),
+        ( $version == 6 ? bcd2bin($ip) : pack( N => $ip ) )
+    );
+
     return Net::Works::Network->new(
-        subnet  => $ip . '/' . $masklen,
+        subnet  => $address . '/' . $masklen,
         version => $version,
     );
 }
