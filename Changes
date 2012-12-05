@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.04     2012-12-04
+
 - Speed improvements for Net::Works::Network->range_as_subnets(). For most use
   cases this won't matter but for our use at MaxMind we end up calling this a
   lot so making it faster is a big win.
