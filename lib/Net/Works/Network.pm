@@ -87,8 +87,12 @@ sub new_from_integer {
     my %p     = @_;
 
     my $address = delete $p{address};
+    my $version = delete $p{version};
 
-    return $class->new( _address_integer => $address, %p );
+    $version ||= ref $address ? 6 : 4;
+
+    return $class->new( _address_integer => $address, version => $version,
+        %p );
 }
 
 sub _build_address_string {
