@@ -85,13 +85,14 @@ override BUILDARGS => sub {
 # Data::Validate::IP does not think '::' is a valid IPv6 address -
 # https://rt.cpan.org/Ticket/Display.html?id=81700
 sub _is_ipv6 {
-    return $_[0] eq '::' || is_ipv6($_[0]);
+    return $_[0] eq '::' || is_ipv6( $_[0] );
 }
 
 sub _build_address_integer {
     my $self = shift;
 
-    my $packed = inet_pton( $self->address_family(), $self->_address_string() );
+    my $packed
+        = inet_pton( $self->address_family(), $self->_address_string() );
 
     return $self->version() == 4
         ? unpack( N => $packed )
@@ -156,7 +157,7 @@ sub as_string {
 sub _build_first {
     my $self = shift;
 
-    my $id = $self->_address_integer() & $self->_subnet_integer();
+    my $id = $self->_first_as_integer;
 
     return Net::Works::Address->new_from_integer(
         integer => $id,
@@ -164,16 +165,21 @@ sub _build_first {
     );
 }
 
+sub _first_as_integer { $_[0]->_address_integer() & $_[0]->_subnet_integer() }
+
 sub _build_last {
     my $self = shift;
 
-    my $broadcast
-        = $self->_address_integer() | ( $self->_max() & ~$self->_subnet_integer() );
+    my $broadcast = $self->_last_as_integer;
 
     return Net::Works::Address->new_from_integer(
         integer => $broadcast,
         version => $self->version(),
     );
+}
+
+sub _last_as_integer {
+    $_[0]->_address_integer() | ( $_[0]->_max() & ~$_[0]->_subnet_integer() );
 }
 
 {
@@ -288,7 +294,7 @@ sub _split_one_range {
 
         push @subnets, $max_network;
 
-        $first = $max_network->last()->next_ip()->as_integer();
+        $first = $max_network->_last_as_integer + 1;
     }
 
     return @subnets;
