@@ -409,7 +409,7 @@ need this unless you're trying to force a dotted quad to be interpreted as an
 IPv6 network or to a force an IPv6 address colon-separated hex number to be
 interpreted as an IPv4 network.
 
-=head2 Net::Works::Network->new_from_string( ... )
+=head2 Net::Works::Network->new_from_integer( ... )
 
 This method takes a C<subnet> parameter and an optional C<version>
 parameter. The C<subnet> parameter should be an integer representation of an
