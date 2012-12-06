@@ -87,13 +87,16 @@ sub new_from_integer {
     my $class = shift;
     my %p     = @_;
 
-    my $address = delete $p{address};
+    my $integer = delete $p{integer};
     my $version = delete $p{version};
 
-    $version ||= ref $address ? 6 : 4;
+    $version ||= ref $integer ? 6 : 4;
 
-    return $class->new( _address_integer => $address, version => $version,
-        %p );
+    return $class->new(
+        _address_integer => $integer,
+        version          => $version,
+        %p,
+    );
 }
 
 sub _build_address_string {
@@ -336,7 +339,7 @@ sub _max_subnet {
     }
 
     return Net::Works::Network->new_from_integer(
-        address     => $ip,
+        integer     => $ip,
         mask_length => $masklen,
         version     => $version,
     );
@@ -411,8 +414,8 @@ interpreted as an IPv4 network.
 
 =head2 Net::Works::Network->new_from_integer( ... )
 
-This method takes a C<subnet> parameter and an optional C<version>
-parameter. The C<subnet> parameter should be an integer representation of an
+This method takes an C<integer> parameter and an optional C<version>
+parameter. The C<integer> parameter should be an integer representation of an
 IP within the subnet. The C<version> parameter should be either C<4> or C<6>.
 
 =head2 $network->as_string()
