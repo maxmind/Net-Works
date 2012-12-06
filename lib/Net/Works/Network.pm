@@ -412,7 +412,7 @@ interpreted as an IPv4 network.
 =head2 Net::Works::Network->new_from_string( ... )
 
 This method takes a C<subnet> parameter and an optional C<version>
-parameter. The C<subnet> parameter should be an integer representatin of an
+parameter. The C<subnet> parameter should be an integer representation of an
 IP within the subnet. The C<version> parameter should be either C<4> or C<6>.
 
 =head2 $network->as_string()
