@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 use Data::Validate::IP qw( is_ipv4 is_ipv6 );
 use List::AllUtils qw( any );
-use Math::BigInt try => 'GMP,Pari,FastCalc';
+use Math::Int128 qw(uint128);
 use Net::Works::Address;
 use Net::Works::Types qw( Int IPInt Str );
 use NetAddr::IP::Util qw( bcd2bin bin2bcd );
@@ -95,7 +95,7 @@ sub _build_address_integer {
 
     return $self->version() == 4
         ? unpack( N => $packed )
-        : Math::BigInt->new( bin2bcd($packed) );
+        : uint128( bin2bcd($packed) );
 }
 
 sub _build_subnet_integer {
@@ -302,7 +302,7 @@ sub _max_subnet {
     my $masklen = $version == 6 ? 128 : 32;
 
     my $v = $ip;
-    my $reverse_mask = $version == 6 ? Math::BigInt->new(1) : 1;
+    my $reverse_mask = $version == 6 ? uint128(1) : 1;
 
     while (( $v & 1 ) == 0
         && $masklen > 0

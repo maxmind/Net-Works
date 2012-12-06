@@ -5,7 +5,7 @@ use warnings;
 
 use Carp qw( confess );
 use Data::Validate::IP qw( is_ipv4 );
-use Math::BigInt try => 'GMP,Pari,FastCalc';
+use Math::Int128 qw(uint128 uint128_to_hex uint128_to_number);
 use NetAddr::IP::Util qw( bin2bcd bcd2bin ipv6_n2x );
 use Net::Works::Types qw( IPInt PackedBinary Str );
 use Scalar::Util qw( blessed );
@@ -84,7 +84,7 @@ sub new_from_integer {
     $version ||= ref $int ? 6 : 4;
 
     if ( $version == 4 && ref($int) ) {
-        $int = $int->numify;
+        $int = uint128_to_number($int);
     }
 
     my $packed = $version == 4 ? pack( N => $int ) : bcd2bin($int);
@@ -112,7 +112,7 @@ sub _build_integer {
 
     return $self->version == 4
         ? unpack( N => $self->as_binary() )
-        : Math::BigInt->new( bin2bcd( $self->as_binary() ) );
+        : uint128( bin2bcd( $self->as_binary() ) );
 }
 
 sub as_ipv4_string {
@@ -134,10 +134,9 @@ sub as_bit_string {
     my $self = shift;
 
     if ( $self->version == 6 ) {
-        my $bin = $self->as_integer()->as_bin();
-
-        $bin =~ s/^0b//;
-        return sprintf( '%0128s', $bin );
+        my $hex = uint128_to_hex($self->as_integer());
+        my @ha = $hex =~ /.{8}/g;
+        return join '',  map { sprintf('%032b', hex($_)) } @ha;
     }
     else {
         return sprintf( '%032b', $self->as_integer() );

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-use Math::BigInt try => 'GMP,Pari,FastCalc';
+use Math::Int128 qw(uint128);
 use Net::Works::Types qw( Int IPVersion );
 use Socket qw( AF_INET AF_INET6 );
 
@@ -27,7 +27,7 @@ has address_family => (
 {
     my %max = (
         4 => 0xFFFFFFFF,
-        6 => Math::BigInt->from_hex('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'),
+        6 => uint128(0) - 1,
     );
 
     sub _max {
