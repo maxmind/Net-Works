@@ -82,6 +82,15 @@ sub new_from_string {
     );
 }
 
+sub new_from_integer {
+    my $class = shift;
+    my %p     = @_;
+
+    my $address = delete $p{address};
+
+    return $class->new( _address_integer => $address, %p );
+}
+
 sub _build_address_string {
     _integer_address_to_string( $_[0]->_first_as_integer );
 }
@@ -201,16 +210,20 @@ sub _last_as_integer {
             map { [ $_->first()->as_integer(), $_->last()->as_integer() ] }
                 sort { $a->first <=> $b->first }
                 map {
-                Net::Works::Network->new_from_string( string => $_,
-                    version => 4 )
+                Net::Works::Network->new_from_string(
+                    string  => $_,
+                    version => 4
+                    )
                 } @reserved_4,
         ],
         6 => [
             map { [ $_->first()->as_integer(), $_->last()->as_integer() ] }
                 sort { $a->first <=> $b->first }
                 map {
-                Net::Works::Network->new_from_string( string => $_,
-                    version => 6 )
+                Net::Works::Network->new_from_string(
+                    string  => $_,
+                    version => 6
+                    )
                 } @reserved_6,
         ],
     );
@@ -317,14 +330,10 @@ sub _max_subnet {
         $reverse_mask = ( $reverse_mask << 1 ) | 1;
     }
 
-    my $address = inet_ntop(
-        ( $version == 6 ? AF_INET6 : AF_INET ),
-        ( $version == 6 ? bcd2bin($ip) : pack( N => $ip ) )
-    );
-
-    return Net::Works::Network->new_from_string(
-        string  => $address . '/' . $masklen,
-        version => $version,
+    return Net::Works::Network->new_from_integer(
+        address     => $ip,
+        mask_length => $masklen,
+        version     => $version,
     );
 }
 
