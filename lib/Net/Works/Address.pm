@@ -5,9 +5,10 @@ use warnings;
 
 use Carp qw( confess );
 use Data::Validate::IP qw( is_ipv4 );
-use Math::Int128 qw(uint128 uint128_to_hex uint128_to_number);
+use Math::Int128 qw( uint128 uint128_to_hex uint128_to_number );
 use NetAddr::IP::Util qw( bin2bcd bcd2bin ipv6_n2x );
 use Net::Works::Types qw( IPInt PackedBinary Str );
+use Net::Works::Util qw( _integer_address_to_binary _string_address_to_integer );
 use Scalar::Util qw( blessed );
 use Socket qw( AF_INET AF_INET6 inet_pton inet_ntop );
 
