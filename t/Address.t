@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 
+use Math::Int128 qw(uint128);
 use Test::Fatal;
 use Test::More 0.88;
 
@@ -227,7 +228,7 @@ use Net::Works::Address;
         'as_integer returns 2**32 - 1, IPv6'
     );
 
-    my $max_128 = do { use bigint; 2**128 - 1 };
+    my $max_128 = uint128(2)**128 - uint128(1);
     $ip = Net::Works::Address->new_from_integer(
         integer => $max_128,
         version => 6,

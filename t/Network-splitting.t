@@ -4,6 +4,7 @@ use warnings;
 use Test::More 0.88;
 
 use List::AllUtils qw( each_array );
+use Math::Int128 qw(uint128);
 use Net::Works::Network;
 
 {
@@ -173,10 +174,9 @@ use Net::Works::Network;
     my $end   = 'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff';
 
     my @subnets = do {
-        use bigint;
         map {
             Net::Works::Address->new_from_integer(
-                integer => 2**$_,
+                integer => uint128(2)**$_,
                 version => 6
                 )->as_string()
                 . '/'

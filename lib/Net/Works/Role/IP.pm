@@ -6,7 +6,7 @@ use namespace::autoclean;
 
 use Math::Int128 qw(uint128 net_to_uint128 uint128_to_net);
 use Net::Works::Types qw( Int IPVersion );
-use NetAddr::IP::Util qw( bcd2bin );
+use NetAddr::IP::Util qw( bcd2bin bin2bcd );
 use Socket qw( AF_INET AF_INET6 inet_pton inet_ntop );
 use Scalar::Util qw( blessed );
 

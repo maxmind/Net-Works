@@ -28,18 +28,18 @@ use Moose;
 with 'Net::Works::Role::IP';
 
 has _binary => (
-    is       => 'ro',
-    reader   => 'as_binary',
-    isa      => PackedBinary,
-    required => 1,
+    is      => 'ro',
+    reader  => 'as_binary',
+    isa     => PackedBinary,
+    lazy    => 1,
+    builder => '_build_binary',
 );
 
 has _integer => (
-    is      => 'ro',
-    reader  => 'as_integer',
-    isa     => IPInt,
-    lazy    => 1,
-    builder => '_build_integer',
+    is       => 'ro',
+    reader   => 'as_integer',
+    isa      => IPInt,
+    required => 1,
 
 );
 
@@ -66,11 +66,9 @@ sub new_from_string {
         $version ||= 6;
     }
 
-    my $family = $version == 6 ? AF_INET6 : AF_INET;
-
     return $class->new(
-        _binary => inet_pton( $family, $str ),
-        version   => $version,
+        _integer => _string_address_to_integer( $str, $version ),
+        version  => $version,
         %p,
     );
 }
@@ -87,11 +85,13 @@ sub new_from_integer {
         $int = uint128_to_number($int);
     }
 
-    my $packed = $version == 4 ? pack( N => $int ) : bcd2bin($int);
+    if ( $version == 6 && !ref($int) ) {
+        $int = uint128($int);
+    }
 
     return $class->new(
-        _binary => $packed,
-        version => $version,
+        _integer => $int,
+        version  => $version,
         %p,
     );
 }
@@ -107,13 +107,7 @@ sub _overloaded_as_string {
     return $_[0]->as_string();
 }
 
-sub _build_integer {
-    my $self = shift;
-
-    return $self->version == 4
-        ? unpack( N => $self->as_binary() )
-        : uint128( bin2bcd( $self->as_binary() ) );
-}
+sub _build_binary { _integer_address_to_binary( $_[0]->as_integer() ) }
 
 sub as_ipv4_string {
     my $self = shift;
@@ -134,9 +128,9 @@ sub as_bit_string {
     my $self = shift;
 
     if ( $self->version == 6 ) {
-        my $hex = uint128_to_hex($self->as_integer());
+        my $hex = uint128_to_hex( $self->as_integer() );
         my @ha = $hex =~ /.{8}/g;
-        return join '',  map { sprintf('%032b', hex($_)) } @ha;
+        return join '', map { sprintf( '%032b', hex($_) ) } @ha;
     }
     else {
         return sprintf( '%032b', $self->as_integer() );
