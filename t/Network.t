@@ -6,7 +6,7 @@ use Test::More 0.88;
 use Net::Works::Network;
 
 {
-    my $net = Net::Works::Network->new( subnet => '1.1.1.0/28' );
+    my $net = Net::Works::Network->new_from_string( string => '1.1.1.0/28' );
 
     is(
         $net->as_string(),
@@ -54,7 +54,7 @@ use Net::Works::Network;
 }
 
 {
-    my $net = Net::Works::Network->new( subnet => 'ffff::1200/120' );
+    my $net = Net::Works::Network->new_from_string( string => 'ffff::1200/120' );
 
     is(
         $net->as_string(),
@@ -102,7 +102,7 @@ use Net::Works::Network;
 }
 
 {
-    my $net = Net::Works::Network->new( subnet => '1.1.1.1/32' );
+    my $net = Net::Works::Network->new_from_string( string => '1.1.1.1/32' );
 
     _test_iterator(
         $net,
@@ -112,7 +112,7 @@ use Net::Works::Network;
 }
 
 {
-    my $net = Net::Works::Network->new( subnet => '1.1.1.0/31' );
+    my $net = Net::Works::Network->new_from_string( string => '1.1.1.0/31' );
 
     _test_iterator(
         $net,
@@ -122,7 +122,7 @@ use Net::Works::Network;
 }
 
 {
-    my $net = Net::Works::Network->new( subnet => '1.1.1.4/30' );
+    my $net = Net::Works::Network->new_from_string( string => '1.1.1.4/30' );
 
     _test_iterator(
         $net,
@@ -141,7 +141,7 @@ use Net::Works::Network;
     );
 
     for my $subnet ( sort keys %tests ) {
-        my $net = Net::Works::Network->new( subnet => $subnet );
+        my $net = Net::Works::Network->new_from_string( string => $subnet );
 
         is(
             $net->max_mask_length(),
@@ -152,7 +152,7 @@ use Net::Works::Network;
 }
 
 {
-    my $net = Net::Works::Network->new( subnet => '::/0' );
+    my $net = Net::Works::Network->new_from_string( string => '::/0' );
 
     is( $net->as_string(), '::/0', 'got subnet passed to constructor' );
     is(

@@ -93,7 +93,7 @@ use Net::Works::Network;
     my $end   = '0.0.0.255';
 
     my @expect = (
-        map { Net::Works::Network->new( subnet => $_ ) }
+        map { Net::Works::Network->new_from_string( string => $_ ) }
             qw(
             0.0.0.1/32
             0.0.0.2/31
@@ -114,7 +114,7 @@ use Net::Works::Network;
     my $end   = '12.0.0.0';
 
     my @expect = (
-        map { Net::Works::Network->new( subnet => $_ ) }
+        map { Net::Works::Network->new_from_string( string => $_ ) }
             qw(
             11.0.0.0/8
             12.0.0.0/32
@@ -129,7 +129,7 @@ use Net::Works::Network;
     my $end   = '19.255.255.255';
 
     my @expect = (
-        map { Net::Works::Network->new( subnet => $_ ) }
+        map { Net::Works::Network->new_from_string( string => $_ ) }
             qw(
             0.0.0.1/32
             0.0.0.2/31
@@ -185,7 +185,7 @@ use Net::Works::Network;
     };
 
     my @expect = (
-        map { Net::Works::Network->new( subnet => $_, version => 6 ) } @subnets,
+        map { Net::Works::Network->new_from_string( string => $_, version => 6 ) } @subnets,
         qw(
             ::8.0.0.0/103
             ::11.0.0.0/104
