@@ -404,10 +404,17 @@ need this unless you're trying to force a dotted quad to be interpreted as an
 IPv6 network or to a force an IPv6 address colon-separated hex number to be
 interpreted as an IPv4 network.
 
+=head2 Net::Works::Network->new_from_string( ... )
+
+This method takes a C<subnet> parameter and an optional C<version>
+parameter. The C<subnet> parameter should be an integer representatin of an
+IP within the subnet. The C<version> parameter should be either C<4> or C<6>.
+
 =head2 $network->as_string()
 
 Returns a string representation of the network like "1.0.0.0/24" or
-"a800:f000::/105".
+"a800:f000::/105". The IP address in the string is the first address
+within the subnet.
 
 =head2 $network->version()
 
@@ -415,7 +422,7 @@ Returns a 4 or 6 to indicate whether this is an IPv4 or IPv6 network.
 
 =head2 $network->mask_length()
 
-Returns the numeric network as passed to the constructor.
+Returns the length of the netmask as an integer.
 
 =head2 $network->bits()
 
