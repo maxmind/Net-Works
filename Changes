@@ -3,7 +3,7 @@
 - More internals rewrites for the sake of speed. We now use Math::Int128
   instead of Math::BigInt. The former is way faster.
 
-- Net::Works::Network now has two constructor, new_from_string() and
+- Net::Works::Network now has two constructors, new_from_string() and
   new_from_integer(), just like Net::Works::Address. The new() method should
   no longer be used.
 
