@@ -14,13 +14,13 @@ use MooseX::Types -declare => [
         )
 ];
 
-use MooseX::Types::Moose qw( Int Value );
+use MooseX::Types::Moose qw( Int Str );
 
 class_type BigInt, { class => 'Math::BigInt' };
 class_type UInt128, { class => 'Math::UInt128' };
 
 subtype PackedBinary,
-    as Value;
+    as Str;
 
 subtype IPInt,
     as Int|UInt128;
