@@ -10,7 +10,7 @@ use NetAddr::IP::Util qw( bin2bcd bcd2bin ipv6_n2x );
 use Net::Works::Types qw( IPInt PackedBinary Str );
 use Net::Works::Util qw( _integer_address_to_binary _string_address_to_integer );
 use Scalar::Util qw( blessed );
-use Socket qw( AF_INET AF_INET6 inet_pton inet_ntop );
+use Socket 1.99 qw( AF_INET AF_INET6 inet_pton inet_ntop );
 
 use integer;
 
