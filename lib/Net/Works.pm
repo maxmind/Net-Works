@@ -68,8 +68,8 @@ the range.
 
 =item * Does less
 
-This distro does not wrap every method provided by L<NetAddr::IP>. Patches to
-add more wrappers are welcome, however.
+This distro does not support every method provided by L<NetAddr::IP>. Patches
+to add more features are welcome, however.
 
 =back
 

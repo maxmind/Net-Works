@@ -4,13 +4,12 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-use Data::Validate::IP qw( is_ipv4 is_ipv6 );
 use List::AllUtils qw( any );
 use Math::Int128 qw(uint128);
 use Net::Works::Address;
 use Net::Works::Types qw( Int IPInt Str );
-use Net::Works::Util qw( _integer_address_to_string _string_address_to_integer );
-use NetAddr::IP::Util qw( bcd2bin bin2bcd );
+use Net::Works::Util
+    qw( _integer_address_to_string _string_address_to_integer );
 use Socket 1.99 qw( inet_ntop inet_pton AF_INET AF_INET6 );
 
 use integer;
@@ -69,9 +68,10 @@ sub new_from_string {
 
     my ( $address, $masklen ) = split '/', $p{string};
 
-    my $version = $p{version} ? $p{version} : _is_ipv6($address) ? 6 : 4;
+    my $version
+        = $p{version} ? $p{version} : inet_pton( AF_INET6, $address ) ? 6 : 4;
 
-    if ( $version == 6 && is_ipv4($address) ) {
+    if ( $version == 6 && inet_pton( AF_INET, $address ) ) {
         $masklen += 96;
         $address = '::' . $address;
     }
@@ -101,12 +101,6 @@ sub new_from_integer {
 
 sub _build_address_string {
     _integer_address_to_string( $_[0]->_first_as_integer );
-}
-
-# Data::Validate::IP does not think '::' is a valid IPv6 address -
-# https://rt.cpan.org/Ticket/Display.html?id=81700
-sub _is_ipv6 {
-    return $_[0] eq '::' || is_ipv6( $_[0] );
 }
 
 sub _build_subnet_integer {
@@ -391,11 +385,8 @@ Objects of this class represent an IP address network. It can handle both IPv4
 and IPv6 subnets. It provides various methods for getting information about
 the subnet.
 
-For IPv6, it uses big integers (via Math::BigInt) to represent the numeric
-value of an address as needed.
-
-This module is currently a thin wrapper around NetAddr::IP but that could
-change in the future.
+For IPv6, it uses 128-bit integers (via Math::Int128) to represent the
+numeric value of an address as needed.
 
 =head1 METHODS
 

@@ -3,8 +3,7 @@ package Net::Works::Util;
 use strict;
 use warnings;
 
-use Math::Int128 qw( net_to_uint128 );
-use NetAddr::IP::Util qw( bcd2bin bin2bcd );
+use Math::Int128 qw( net_to_uint128 uint128_to_net );
 use Socket qw( AF_INET AF_INET6 inet_pton inet_ntop );
 use Scalar::Util qw( blessed );
 
@@ -31,10 +30,8 @@ sub _string_address_to_integer {
 sub _integer_address_to_binary {
     my $integer = shift;
 
-    # Note: there seems to be a bug in uint128_to_net that causes a byte
-    # to be flipped as of Dec. 6, 2012. Using bcd2bin instead.
     if ( ref $integer && blessed $integer) {
-        return bcd2bin($integer);
+        return uint128_to_net($integer);
     }
     else {
         return pack( N => $integer );
