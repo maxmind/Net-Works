@@ -16,7 +16,6 @@ has version => (
     is       => 'ro',
     isa      => IPVersion,
     required => 1,
-    coerce   => 1,
 );
 
 has _integer => (
