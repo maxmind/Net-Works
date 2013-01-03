@@ -187,7 +187,7 @@ __END__
 
 =head1 SYNOPSIS
 
-  my $ip = Net::Works::Address->new( address => '1.2.3.4' );
+  my $ip = Net::Works::Address->new_from_string( string => '1.2.3.4' );
   print $ip->as_string();     # 1.2.3.4
   print $ip->as_integer();    # 16909060
   print $ip->as_binary();     # 4-byte packed form of the address
