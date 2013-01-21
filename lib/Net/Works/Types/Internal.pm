@@ -23,7 +23,7 @@ subtype PackedBinary,
 
 subtype IPInt,
     as Int | UInt128,
-    where { $_ >= 0 },
+    inline_as {  "$_[0] > 0" },
     message { ( defined $_ ? $_ : 'undef' ) . ' is not a valid IP integer' };
 
 subtype IPVersion,
@@ -31,7 +31,9 @@ subtype IPVersion,
 
 subtype MaskLength,
     as Int,
-    where { $_ >= 0 && $_ <= 128 },
-    message { ( defined $_ ? $_ : 'undef' ) . ' is not a valid IP mask length' };
+    inline_as { "$_ >= 0 && $_ <= 128" },
+    message {
+        ( defined $_ ? $_ : 'undef' ) . ' is not a valid IP mask length';
+    };
 
 1;
