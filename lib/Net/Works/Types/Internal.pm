@@ -23,8 +23,8 @@ subtype PackedBinary,
 
 subtype IPInt,
     as Int | UInt128,
-    where { $_ > 0 },
-    inline_as { $_[0]->parent()->_inline_check( $_[1] ) . " && ($_[1] > 0)" },
+    where { $_ >= 0 },
+    inline_as { $_[0]->parent()->_inline_check( $_[1] ) . " && ($_[1] >= 0)" },
     message { ( defined $_ ? $_ : 'undef' ) . ' is not a valid IP integer' };
 
 subtype IPVersion,
