@@ -417,7 +417,7 @@ This class provides the following methods:
 
 This method takes a C<string> parameter and an optional C<version>
 parameter. The C<string> parameter should be a string representation of an IP
-address subnet.
+address subnet, e.g., "4.3.2.0/24".
 
 The C<version> parameter should be either C<4> or C<6>, but you don't really
 need this unless you're trying to force a dotted quad to be interpreted as an
@@ -426,9 +426,11 @@ interpreted as an IPv4 network.
 
 =head2 Net::Works::Network->new_from_integer( ... )
 
-This method takes an C<integer> parameter and an optional C<version>
-parameter. The C<integer> parameter should be an integer representation of an
-IP within the subnet. The C<version> parameter should be either C<4> or C<6>.
+This method takes an C<integer> parameter, C<mask_length> parameter, and
+an optional C<version> parameter. The C<integer> parameter should be an
+integer representation of an IP within the subnet. The C<mask_length>
+parameter should be an integer between 0 and 32 for IPv4 or 0 and 128 for
+IPv6. The C<version> parameter should be either C<4> or C<6>.
 
 =head2 $network->as_string()
 
