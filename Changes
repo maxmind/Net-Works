@@ -3,6 +3,9 @@
 - The Net::Works::Network->range_as_subnets() method now takes a version
   parameter so you can explicitly ask for IPv4 or IPv6.
 
+- Also fixed the license in the docs to match the LICENSE file in the repo
+  (same as Perl 5).
+
 
 0.09     2013-02-06
 
