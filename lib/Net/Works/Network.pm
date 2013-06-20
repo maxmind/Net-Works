@@ -285,11 +285,10 @@ sub _last_as_integer {
 }
 
 sub range_as_subnets {
-    my $class = shift;
-    my $first = shift;
-    my $last  = shift;
-
-    my $version = ( any { /:/ } $first, $last ) ? 6 : 4;
+    my $class   = shift;
+    my $first   = shift;
+    my $last    = shift;
+    my $version = shift || ( any { /:/ } $first, $last ) ? 6 : 4;
 
     $first = Net::Works::Address->new_from_string(
         string  => $first,
@@ -474,7 +473,7 @@ For single address subnets (/32 or /128), this returns a single address.
 
 When it has exhausted all the addresses in the network, it returns C<undef>
 
-=head2 Net::Works::Network->range_as_subnets( $first, $last )
+=head2 Net::Works::Network->range_as_subnets( $first, $last, $version )
 
 Given two IP addresses as strings, this method breaks the range up into the
 largest subnets that include all the IP addresses in the range (including the
@@ -483,5 +482,6 @@ two passed to this method).
 It also excludes any reserved subnets in the range (such as the 10.0.0.0/8 or
 169.254.0.0/16 ranges).
 
-This method works with both IPv4 and IPv6 addresses. If either address
-contains a colon (:) then it assumes that you want IPv6 subnets.
+This method works with both IPv4 and IPv6 addresses. You can pass an explicit
+version as the final argument. If you don't, we check whether either address
+contains a colon (:). If either of them does, we assume you want IPv6 subnets.

@@ -126,6 +126,21 @@ use Net::Works::Network;
 }
 
 {
+    my $start = '10.0.0.0';
+    my $end   = '12.0.0.0';
+
+    my @expect = (
+        map { Net::Works::Network->new_from_string( string => $_ ) }
+            qw(
+            ::11.0.0.0/104
+            ::12.0.0.0/128
+            )
+    );
+
+    _test_range_as_subnets( $start, $end, \@expect, 6 );
+}
+
+{
     my $start = '0.0.0.1';
     my $end   = '19.255.255.255';
 
@@ -440,8 +455,10 @@ sub _test_range_as_subnets {
     my $start          = shift;
     my $end            = shift;
     my $expect_subnets = shift;
+    my $version        = shift;
 
-    my @subnets = Net::Works::Network->range_as_subnets( $start, $end );
+    my @subnets
+        = Net::Works::Network->range_as_subnets( $start, $end, $version );
 
     is(
         scalar @subnets,

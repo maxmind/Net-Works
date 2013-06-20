@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- The Net::Works::Network->range_as_subnets() method now takes a version
+  parameter so you can explicitly ask for IPv4 or IPv6.
+
+
 0.09     2013-02-06
 
 - Documentation fixes
