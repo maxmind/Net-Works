@@ -40,7 +40,7 @@ C<Net::Works> provides two classes, one for single IP addresses and one for
 networks (and subnets). With L<NetAddr::IP> a single address is represented as
 a /32 or /128 subnet. This is technically correct but can make the API harder
 to as whenever you want a single IP you're always stuck checking that the
-object you're working with is the rize size subnet.
+object you're working with is the size subnet.
 
 =item * Multiple constructors
 
