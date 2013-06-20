@@ -384,11 +384,11 @@ __END__
   my $iterator = $network->iterator();
   while ( my $ip = $iterator->() ) { ... }
 
-  my $network = Net::Works::Network->new_from_string( string => '1.0.0.4/32' );
-  print $network->max_mask_length(); # 30
+  my $network_32 = Net::Works::Network->new_from_string( string => '1.0.0.4/32' );
+  print $network_32->max_mask_length(); # 30
 
   # All methods work with IPv4 and IPv6 subnets
-  my $network = Net::Works::Network->new_from_string( string => 'a800:f000::/20' );
+  my $ipv6_network = Net::Works::Network->new_from_string( string => 'a800:f000::/20' );
 
   my @subnets = Net::Works::Network->range_as_subnets( '1.1.1.1', '1.1.1.32' );
   print $_->as_string, "\n" for @subnets;

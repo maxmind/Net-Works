@@ -202,10 +202,10 @@ __END__
 
   my @sorted = sort $next, $prev, $ip;
 
-  my $ip = Net::Works::Address->new_from_string( string => 'a900::1234' );
-  print $ip->as_integer(); # 224639531287650782520743393187378238004
+  my $ipv6 = Net::Works::Address->new_from_string( string => 'a900::1234' );
+  print $ipv6->as_integer(); # 224639531287650782520743393187378238004
 
-  my $ip = Net::Works::Address->new_from_integer( integer => 16909060 );
+  my $ip_from_int = Net::Works::Address->new_from_integer( integer => 16909060 );
 
 =head1 DESCRIPTION
 
