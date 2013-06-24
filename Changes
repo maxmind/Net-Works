@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.11     2013-06-24
+
 - Added $network->first_as_integer() and ->last_as_integer() methods. This is
   an optimization so you don't have to write
   $network->first()->as_integer(). Internally, the latter just turns an
