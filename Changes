@@ -1,5 +1,12 @@
 {{$NEXT}}
 
+- Added $network->first_as_integer() and ->last_as_integer() methods. This is
+  an optimization so you don't have to write
+  $network->first()->as_integer(). Internally, the latter just turns an
+  integer into a Net::Works::Address object that you then get the same integer
+  out of.
+
+
 0.10     2013-06-20
 
 - The Net::Works::Network->range_as_subnets() method now takes a version
