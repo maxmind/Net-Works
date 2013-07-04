@@ -1,4 +1,5 @@
 language: perl
+
 perl:
    - 5.19
    - 5.18
@@ -6,11 +7,21 @@ perl:
    - 5.14
    - 5.12
    - 5.10
+
 before_install:
-   - export AUTOMATED_TESTING=1 HARNESS_OPTIONS=j10:c HARNESS_TIMER=1
+   - export AUTOMATED_TESTING=1 HARNESS_OPTIONS=j10:c HARNESS_TIMER=1 SKIP_POD_LINKCHECK=1
+
 install:
-   - cpanm --quiet --notest --skip-satisfied Dist::Zilla Pod::Weaver::Section::Contributors
+   - cpanm --quiet --notest --skip-satisfied Dist::Zilla Pod::Coverage::Moose Pod::Weaver::Section::Contributors Test::Spelling
    - "dzil authordeps | xargs -n 5 -P 10 cpanm --quiet --notest --skip-satisfied"
    - "dzil listdeps   | cpanm --verbose --skip-satisfied"
+
 script:
    - dzil smoke --release --author
+
+notifications:
+  email:
+    recipients:
+      - dev@maxmind.com
+    on_success: change
+    on_failure: always
