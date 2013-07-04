@@ -382,7 +382,7 @@ __END__
   print $last->as_string();     # 1.0.0.255
 
   my $iterator = $network->iterator();
-  while ( my $ip = $iterator->() ) { ... }
+  while ( my $ip = $iterator->() ) { print $ip . "\n"; }
 
   my $network_32 = Net::Works::Network->new_from_string( string => '1.0.0.4/32' );
   print $network_32->max_mask_length(); # 30
