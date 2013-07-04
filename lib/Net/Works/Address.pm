@@ -198,7 +198,7 @@ __END__
   my $next = $ip->next_ip();     # 1.2.3.5
   my $prev = $ip->previous_ip(); # 1.2.3.4
 
-  if ( $next > $ip ) { ... }
+  if ( $next > $ip ) { print $ip->as_string(); }
 
   my @sorted = sort $next, $prev, $ip;
 
