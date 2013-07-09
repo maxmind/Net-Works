@@ -5,8 +5,7 @@ use warnings;
 use namespace::autoclean;
 
 use Math::Int128 qw( uint128 );
-use MooX::Types::MooseLike::Base qw( Int );
-use Net::Works::Types qw( IPInt IPVersion );
+use Net::Works::Types qw( Int IPInt IPVersion );
 use Socket qw( AF_INET AF_INET6 );
 
 use Moo::Role;

@@ -6,9 +6,8 @@ use namespace::autoclean;
 
 use List::AllUtils qw( any );
 use Math::Int128 qw( uint128 );
-use MooX::Types::MooseLike::Base qw( InstanceOf Int Str );
 use Net::Works::Address;
-use Net::Works::Types qw( IPInt MaskLength );
+use Net::Works::Types qw( IPInt MaskLength NetWorksAddress Str );
 use Net::Works::Util
     qw( _integer_address_to_string _string_address_to_integer );
 use Socket 1.99 qw( inet_ntop inet_pton AF_INET AF_INET6 );
@@ -21,7 +20,7 @@ with 'Net::Works::Role::IP';
 
 has first => (
     is       => 'ro',
-    isa      => InstanceOf['Net::Works::Address'],
+    isa      => NetWorksAddress,
     init_arg => undef,
     lazy     => 1,
     builder  => '_build_first',
@@ -29,7 +28,7 @@ has first => (
 
 has last => (
     is       => 'ro',
-    isa      => InstanceOf['Net::Works::Address'],
+    isa      => NetWorksAddress,
     init_arg => undef,
     lazy     => 1,
     builder  => '_build_last',
