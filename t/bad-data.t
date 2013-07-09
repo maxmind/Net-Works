@@ -19,7 +19,7 @@ use Net::Works::Network;
                     version => 4,
                 );
             },
-            qr/\Q$str_val is not a valid IP integer/,
+            qr/\Q$str_val is not a valid integer for an IP address/,
             "Net::Works::Address->new_from_integer() died with $str_val as integer (v4)"
         );
 
@@ -31,7 +31,7 @@ use Net::Works::Network;
                     version     => 4,
                 );
             },
-            qr/\Q$str_val is not a valid IP integer/,
+            qr/\Q$str_val is not a valid integer for an IP address/,
             "Net::Works::Network->new_from_integer() died with $str_val as integer (v4)"
         );
     }
@@ -48,7 +48,7 @@ use Net::Works::Network;
                     version => 6,
                 );
             },
-            qr/\Q$str_val is not a valid IP integer/,
+            qr/\Q$str_val is not a valid integer for an IP address/,
             "Net::Works::Address->new_from_integer() died with $str_val as integer (v6)"
         );
 
@@ -60,7 +60,7 @@ use Net::Works::Network;
                     version     => 6,
                 );
             },
-            qr/\Q$str_val is not a valid IP integer/,
+            qr/\Q$str_val is not a valid integer for an IP address/,
             "Net::Works::Network->new_from_integer() died with $str_val as integer (v6)"
         );
     }
@@ -141,7 +141,7 @@ use Net::Works::Network;
                     version => 4,
                 );
             },
-            qr/\Qis not a valid IP mask length/,
+            qr/\Qis not a valid IP network mask length/,
             "Net::Works::Address->new_from_string() died with bad mask (v4)"
         );
     }
@@ -154,7 +154,7 @@ use Net::Works::Network;
                     version => 6,
                 );
             },
-            qr/\Qis not a valid IP mask length/,
+            qr/\Qis not a valid IP network mask length/,
             "Net::Works::Address->new_from_string() died with bad mask (v6)"
         );
     }

@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+- Converted to use Moo instead of Moose.
+
+
 0.11     2013-06-24
 
 - Added $network->first_as_integer() and ->last_as_integer() methods. This is

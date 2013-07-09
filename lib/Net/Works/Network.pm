@@ -6,21 +6,22 @@ use namespace::autoclean;
 
 use List::AllUtils qw( any );
 use Math::Int128 qw( uint128 );
+use MooX::Types::MooseLike::Base qw( InstanceOf Int Str );
 use Net::Works::Address;
-use Net::Works::Types qw( Int IPInt MaskLength Str );
+use Net::Works::Types qw( IPInt MaskLength );
 use Net::Works::Util
     qw( _integer_address_to_string _string_address_to_integer );
 use Socket 1.99 qw( inet_ntop inet_pton AF_INET AF_INET6 );
 
 use integer;
 
-use Moose;
+use Moo;
 
 with 'Net::Works::Role::IP';
 
 has first => (
     is       => 'ro',
-    isa      => 'Net::Works::Address',
+    isa      => InstanceOf['Net::Works::Address'],
     init_arg => undef,
     lazy     => 1,
     builder  => '_build_first',
@@ -28,7 +29,7 @@ has first => (
 
 has last => (
     is       => 'ro',
-    isa      => 'Net::Works::Address',
+    isa      => InstanceOf['Net::Works::Address'],
     init_arg => undef,
     lazy     => 1,
     builder  => '_build_last',
@@ -63,7 +64,7 @@ sub BUILD {
 
     my $max = $self->version() == 4 ? 32 : 128;
     if ( $self->mask_length() < 0 || $self->mask_length() > $max ) {
-        die $self->mask_length() . ' is not a valid IP mask length';
+        die $self->mask_length() . ' is not a valid IP network mask length';
     }
 
     return;

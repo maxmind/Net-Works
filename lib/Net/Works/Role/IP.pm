@@ -5,10 +5,11 @@ use warnings;
 use namespace::autoclean;
 
 use Math::Int128 qw( uint128 );
-use Net::Works::Types qw( Int IPInt IPVersion );
+use MooX::Types::MooseLike::Base qw( Int );
+use Net::Works::Types qw( IPInt IPVersion );
 use Socket qw( AF_INET AF_INET6 );
 
-use Moose::Role;
+use Moo::Role;
 
 use integer;
 
@@ -60,7 +61,7 @@ sub _validate_ip_integer {
             unless ref $int;
     }
     else {
-        die "$int is not a valid IP integer for IPv4"
+        die "$int is not a valid integer for an IP address"
             if $int >= 2**32;
     }
 

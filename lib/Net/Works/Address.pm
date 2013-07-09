@@ -5,7 +5,8 @@ use warnings;
 
 use Carp qw( confess );
 use Math::Int128 0.06 qw( uint128 uint128_to_hex uint128_to_number );
-use Net::Works::Types qw( PackedBinary Str );
+use MooX::Types::MooseLike::Base qw( Str );
+use Net::Works::Types qw( PackedBinary );
 use Net::Works::Util
     qw( _integer_address_to_binary _string_address_to_integer _validate_ip_string );
 use Scalar::Util qw( blessed );
@@ -23,7 +24,7 @@ use overload (
     '<=>' => '_compare_overload',
 );
 
-use Moose;
+use Moo;
 
 with 'Net::Works::Role::IP';
 
