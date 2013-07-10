@@ -378,7 +378,7 @@ __END__
   my $first = $network->first();
   print $first->as_string();    # 1.0.0.0
 
-  my $last = $network->first();
+  my $last = $network->last();
   print $last->as_string();     # 1.0.0.255
 
   my $iterator = $network->iterator();
