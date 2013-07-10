@@ -17,7 +17,7 @@ install:
    - "dzil listdeps --missing  | cpanm --verbose"
 
 script:
-   - dzil smoke --release --author
+   - dzil test --all
 
 notifications:
   email:
