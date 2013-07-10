@@ -2,6 +2,8 @@
 
 - Converted to use Moo instead of Moose.
 
+- Switched bugtracker to GitHub.
+
 
 0.11     2013-06-24
 
