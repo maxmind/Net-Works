@@ -369,6 +369,8 @@ __END__
 
 =head1 SYNOPSIS
 
+  use Net::Works::Network;
+
   my $network = Net::Works::Network->new_from_string( string => '1.0.0.0/24' );
   print $network->as_string();          # 1.0.0.0/24
   print $network->mask_length();        # 24

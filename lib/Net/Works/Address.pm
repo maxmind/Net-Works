@@ -187,6 +187,8 @@ __END__
 
 =head1 SYNOPSIS
 
+  use Net::Works::Address;
+
   my $ip = Net::Works::Address->new_from_string( string => '1.2.3.4' );
   print $ip->as_string();     # 1.2.3.4
   print $ip->as_integer();    # 16909060
