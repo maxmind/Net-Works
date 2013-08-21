@@ -152,6 +152,67 @@ use Net::Works::Network;
 }
 
 {
+    my %contains = (
+        '1.1.1.0/24' => {
+            true => [
+                qw( 1.1.1.0 1.1.1.1 1.1.1.254 1.1.1.254
+                    1.1.1.0/24 1.1.1.0/26 1.1.1.255/32 )
+            ],
+            false => [
+                qw( 1.1.2.0 1.1.0.255 240.1.2.3
+                    1.1.0.0/16 1.1.0.0/24 11.12.13.14/32 )
+            ],
+        },
+        '97.0.0.0/8' => {
+            true => [
+                qw( 97.0.0.0 97.1.2.3 97.200.201.203 97.255.255.254 97.255.255.255
+                    97.9.0.0/24 97.55.0.0/16 97.0.0.0/8 97.255.255.255/32 )
+            ],
+            false => [
+                qw( 96.255.255.255 98.0.0.0 1.1.1.32 240.1.2.3
+                    96.0.0.0/4 98.0.0.0/8 11.12.13.14/32 )
+            ],
+        },
+        '1000::/8' => {
+            true => [
+                qw( 1000:: 1000::1 10bc:def9:1234::0
+                    10ff:ffff:ffff:ffff:ffff:ffff:ffff:fffe
+                    10ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+                    1000::/8 1000::/16 1034::1/128 10ff::/124
+                    10ff:ffff:ffff:ffff:ffff:ffff:ffff:ffff/128 )
+            ],
+            false => [
+                qw( 0fff:: 0fff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+                    f::f 1100::
+                    1000::/4 2000::/120 ffff::/128 )
+            ],
+        },
+    );
+
+    for my $n ( sort keys %contains ) {
+        my $network = Net::Works::Network->new_from_string( string => $n );
+
+        for my $string ( @{ $contains{$n}{true} } ) {
+            my $object = _objectify_string($string);
+            ok(
+                $network->contains($object),
+                $network->as_string() . ' contains ' . $object->as_string()
+            );
+        }
+
+        for my $string ( @{ $contains{$n}{false} } ) {
+            my $object = _objectify_string($string);
+            ok(
+                !$network->contains($object),
+                $network->as_string()
+                    . ' does not contain '
+                    . $object->as_string()
+            );
+        }
+    }
+}
+
+{
     my $net = Net::Works::Network->new_from_string( string => '::/0' );
 
     is( $net->as_string(), '::/0', 'got subnet passed to constructor' );
@@ -184,6 +245,14 @@ sub _test_iterator {
         $expect_addresses,
         "iterator returned $expect_addresses->[0] - $expect_addresses->[-1]"
     );
+}
+
+sub _objectify_string {
+    my $string = shift;
+
+    return $string =~ m{/}
+        ? Net::Works::Network->new_from_string( string => $string )
+        : Net::Works::Address->new_from_string( string => $string );
 }
 
 done_testing();

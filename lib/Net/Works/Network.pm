@@ -207,6 +207,28 @@ sub last_as_integer {
     $_[0]->_integer() | ( $_[0]->_max() & ~$_[0]->_subnet_integer() );
 }
 
+sub contains {
+    my $self  = shift;
+    my $thing = shift;
+
+    my $first_integer;
+    my $last_integer;
+    if ( $thing->isa('Net::Works::Address') ) {
+        $first_integer = $last_integer = $thing->as_integer();
+    }
+    elsif ( $thing->isa('Net::Works::Network') ) {
+        $first_integer = $thing->first_as_integer();
+        $last_integer  = $thing->last_as_integer();
+    }
+    else {
+        die
+            "$thing is not a Net::Works::Address or Net::Works::Network object";
+    }
+
+    return $first_integer >= $self->first_as_integer()
+        && $last_integer <= $self->last_as_integer();
+}
+
 {
     my @reserved_4 = qw(
         10.0.0.0/8
@@ -482,6 +504,12 @@ time it's called.
 For single address subnets (/32 or /128), this returns a single address.
 
 When it has exhausted all the addresses in the network, it returns C<undef>
+
+=head2 $network->contains($address_or_network)
+
+This method accepts a single L<Net::Works::Address> or L<Net::Works::Network>
+object. It returns true if the given address or network is contained by the
+network it is called on. Note that a network always contains itself.
 
 =head2 Net::Works::Network->range_as_subnets( $first, $last, $version )
 
