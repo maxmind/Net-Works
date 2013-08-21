@@ -1,6 +1,7 @@
 {{$NEXT}}
 
-- Added a Net::Works::Network->contains() method.
+- Added two new Net::Works::Network methods: $network->contains() and
+  $network->split().
 
 
 0.12     2013-07-10

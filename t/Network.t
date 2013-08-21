@@ -213,6 +213,59 @@ use Net::Works::Network;
 }
 
 {
+    my @splits = (
+        [ '1.1.1.0/24'   => [ '1.1.1.0/25',   '1.1.1.128/25' ] ],
+        [ '1.1.1.128/25' => [ '1.1.1.128/26', '1.1.1.192/26' ] ],
+        [ '1.1.1.192/26' => [ '1.1.1.192/27', '1.1.1.224/27' ] ],
+        [ '1.1.1.224/27' => [ '1.1.1.224/28', '1.1.1.240/28' ] ],
+        [ '1.1.1.240/28' => [ '1.1.1.240/29', '1.1.1.248/29' ] ],
+        [ '1.1.1.248/29' => [ '1.1.1.248/30', '1.1.1.252/30' ] ],
+        [ '1.1.1.252/30' => [ '1.1.1.252/31', '1.1.1.254/31' ] ],
+        [ '1.1.1.254/31' => [ '1.1.1.254/32', '1.1.1.255/32' ] ],
+        [ '9000::/8'     => [ '9000::/9',     '9080::/9' ] ],
+        [ '9080::/9'     => [ '9080::/10',    '90c0::/10' ] ],
+        [ '90c0::/10'    => [ '90c0::/11',    '90e0::/11' ] ],
+        [ '90e0::/11'    => [ '90e0::/12',    '90f0::/12' ] ],
+        [ '90f0::/12'    => [ '90f0::/13',    '90f8::/13' ] ],
+        [ '90f8::/13'    => [ '90f8::/14',    '90fc::/14' ] ],
+        [ '90fc::/14'    => [ '90fc::/15',    '90fe::/15' ] ],
+        [ '90fe::/15'    => [ '90fe::/16',    '90ff::/16' ] ],
+    );
+
+    for my $pair (@splits) {
+        my $original
+            = Net::Works::Network->new_from_string( string => $pair->[0] );
+        my @halves = $original->split();
+
+        is_deeply(
+            [ map { $_->as_string() } $original->split() ],
+            $pair->[1],
+            "$pair->[0] splits into $pair->[1][0] and $pair->[1][1]"
+        );
+    }
+
+    is_deeply(
+        [
+            Net::Works::Network->new_from_string( string => '1.1.1.1/32' )
+                ->split()
+        ],
+        [],
+        'split() returns an empty list for single address IPv4 network'
+    );
+
+    is_deeply(
+        [
+            Net::Works::Network->new_from_string(
+                string => '9999::abcd/128'
+            )->split()
+        ],
+        [],
+        'split() returns an empty list for single address IPv6 network'
+    );
+}
+
+
+{
     my $net = Net::Works::Network->new_from_string( string => '::/0' );
 
     is( $net->as_string(), '::/0', 'got subnet passed to constructor' );
