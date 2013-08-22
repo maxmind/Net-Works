@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Added two new Net::Works::Network methods: $network->contains() and
+  $network->split().
+
+
 0.12     2013-07-10
 
 - Converted to use Moo instead of Moose.
