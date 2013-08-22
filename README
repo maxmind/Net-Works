@@ -2,7 +2,7 @@ NAME
     Net::Works - Sane APIs for IP addresses and networks
 
 VERSION
-    version 0.12
+    version 0.13
 
 DESCRIPTION
     The NetAddr::IP module is very complete, correct, and useful. However,
@@ -75,8 +75,10 @@ AUTHORS
 
     *   Olaf Alders <oalders@wundercounter.com>
 
-CONTRIBUTOR
-    William Stevenson <wstevenson@maxmind.com>
+CONTRIBUTORS
+    *   TJ Mather <tjmather@maxmind.com>
+
+    *   William Stevenson <wstevenson@maxmind.com>
 
 COPYRIGHT AND LICENSE
     This software is copyright (c) 2013 by MaxMind, Inc..
