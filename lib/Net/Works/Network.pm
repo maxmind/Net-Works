@@ -250,6 +250,36 @@ sub split {
     );
 }
 
+sub range_as_subnets {
+    my $class   = shift;
+    my $first   = shift;
+    my $last    = shift;
+    my $version = shift || ( any { /:/ } $first, $last ) ? 6 : 4;
+
+    $first = Net::Works::Address->new_from_string(
+        string  => $first,
+        version => $version,
+    ) unless ref $first;
+
+    $last = Net::Works::Address->new_from_string(
+        string  => $last,
+        version => $version,
+    ) unless ref $last;
+
+    my @ranges = $class->_remove_reserved_subnets_from_range(
+        $first->as_integer(),
+        $last->as_integer(),
+        $version
+    );
+
+    my @subnets;
+    for my $range (@ranges) {
+        push @subnets, $class->_split_one_range( @{$range}, $version );
+    }
+
+    return @subnets;
+}
+
 {
     my @reserved_4 = qw(
         10.0.0.0/8
@@ -325,36 +355,6 @@ sub split {
 
         return @ranges;
     }
-}
-
-sub range_as_subnets {
-    my $class   = shift;
-    my $first   = shift;
-    my $last    = shift;
-    my $version = shift || ( any { /:/ } $first, $last ) ? 6 : 4;
-
-    $first = Net::Works::Address->new_from_string(
-        string  => $first,
-        version => $version,
-    ) unless ref $first;
-
-    $last = Net::Works::Address->new_from_string(
-        string  => $last,
-        version => $version,
-    ) unless ref $last;
-
-    my @ranges = $class->_remove_reserved_subnets_from_range(
-        $first->as_integer(),
-        $last->as_integer(),
-        $version
-    );
-
-    my @subnets;
-    for my $range (@ranges) {
-        push @subnets, $class->_split_one_range( @{$range}, $version );
-    }
-
-    return @subnets;
 }
 
 sub _split_one_range {
