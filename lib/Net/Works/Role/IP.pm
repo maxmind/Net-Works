@@ -67,4 +67,9 @@ sub _validate_ip_integer {
     return;
 }
 
+# overload passes extra arguments to this sub for some reason
+sub _overloaded_as_string {
+    return $_[0]->as_string();
+}
+
 1;

@@ -41,6 +41,12 @@ use Net::Works::Address;
         'previous ip before 1.2.3.4 is 1.2.3.3'
     );
 
+    is(
+        "$ip",
+        '1.2.3.4',
+        'stringification of address object works'
+    );
+
     cmp_ok(
         $ip, '<', $next,
         'numeric overloading (<) on address objects works'

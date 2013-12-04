@@ -44,8 +44,8 @@ object you're working with is the size subnet.
 
 =item * Multiple constructors
 
-L<Net::Works> allows you to construct an IP address from a string ("1.2.3.4")
-or an integer (1097) using separate constructors.
+L<Net::Works> allows you to construct an IP address from a string ("192.0.2.1")
+or an integer (3221225985) using separate constructors.
 
 =item * Next & previous IP
 

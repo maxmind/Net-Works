@@ -32,3 +32,5 @@ distro's
 netmask
 subnet
 subnets
+IANA
+Hartmaier
