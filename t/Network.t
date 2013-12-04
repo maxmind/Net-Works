@@ -51,6 +51,12 @@ use Net::Works::Network;
         16,
         [ map { "1.1.1.$_" } 0 .. 15 ],
     );
+
+    is(
+        "$net",
+        '1.1.1.0/28',
+        'stringification of network object works'
+    );
 }
 
 {

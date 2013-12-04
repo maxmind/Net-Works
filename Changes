@@ -1,5 +1,6 @@
 {{$NEXT}}
 - Use only IPv4 and IPv6 address from documentation address space in the docs.
+- Stringify Net::Works::Network objects like Net::Works::Address objects.
 
 0.13     2013-08-22
 

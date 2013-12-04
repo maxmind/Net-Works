@@ -2,7 +2,6 @@ package Net::Works::Network;
 
 use strict;
 use warnings;
-use namespace::autoclean;
 
 use List::AllUtils qw( any );
 use Math::Int128 qw( uint128 );
@@ -13,6 +12,15 @@ use Net::Works::Util
 use Socket 1.99 qw( inet_ntop inet_pton AF_INET AF_INET6 );
 
 use integer;
+
+# Using this currently breaks overloading - see
+# https://rt.cpan.org/Ticket/Display.html?id=50938
+#
+#use namespace::autoclean;
+
+use overload (
+    q{""} => '_overloaded_as_string',
+);
 
 use Moo;
 

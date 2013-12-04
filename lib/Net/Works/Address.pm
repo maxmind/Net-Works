@@ -99,11 +99,6 @@ sub _build_string {
     return inet_ntop( $self->address_family(), $self->as_binary() );
 }
 
-# overload passes extra arguments to this sub for some reason
-sub _overloaded_as_string {
-    return $_[0]->as_string();
-}
-
 sub _build_binary { _integer_address_to_binary( $_[0]->as_integer() ) }
 
 sub as_integer { $_[0]->_integer() }
