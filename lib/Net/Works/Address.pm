@@ -189,25 +189,27 @@ __END__
 
   use Net::Works::Address;
 
-  my $ip = Net::Works::Address->new_from_string( string => '1.2.3.4' );
-  print $ip->as_string();     # 1.2.3.4
-  print $ip->as_integer();    # 16909060
+  my $ip = Net::Works::Address->new_from_string( string => '192.0.2.1' );
+  print $ip->as_string();     # 192.0.2.1
+  print $ip->as_integer();    # 3221225985
   print $ip->as_binary();     # 4-byte packed form of the address
-  print $ip->as_bit_string(); # 00000001000000100000001100000100
+  print $ip->as_bit_string(); # 11000000000000000000001000000001
   print $ip->version();       # 4
   print $ip->mask_length();   # 32
 
-  my $next = $ip->next_ip();     # 1.2.3.5
-  my $prev = $ip->previous_ip(); # 1.2.3.4
+  my $next = $ip->next_ip();     # 192.0.2.2
+  my $prev = $ip->previous_ip(); # 192.0.2.0
 
   if ( $next > $ip ) { print $ip->as_string(); }
 
   my @sorted = sort $next, $prev, $ip;
 
-  my $ipv6 = Net::Works::Address->new_from_string( string => 'a900::1234' );
-  print $ipv6->as_integer(); # 224639531287650782520743393187378238004
+  my $ipv6 = Net::Works::Address->new_from_string( string => '2001:db8::1234' );
+  print $ipv6->as_integer(); # 42540766411282592856903984951653831220
 
-  my $ip_from_int = Net::Works::Address->new_from_integer( integer => 16909060 );
+  my $ip_from_int = Net::Works::Address->new_from_integer(
+      integer => "42540766411282592856903984951653831220"
+  );
 
 =head1 DESCRIPTION
 
@@ -246,7 +248,7 @@ you'll need to set the version explicitly to get an IPv6 address.
 =head2 $ip->as_string()
 
 Returns a string representation of the address in the same format as
-inet_ntop, e.g., "1.2.3.4", "::1.2.3.4", or "ffff::a:1234".
+inet_ntop, e.g., "192.0.2.1", "::192.0.2.1", or "2001:db8::1234".
 
 =head2 $ip->as_integer()
 
