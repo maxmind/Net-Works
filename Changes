@@ -1,6 +1,11 @@
 {{$NEXT}}
-- Use only IPv4 and IPv6 address from documentation address space in the docs.
-- Stringify Net::Works::Network objects like Net::Works::Address objects.
+
+- Docs were changed to only IPv4 and IPv6 addresses from the documentation
+  address space in the docs. (Alexander Hartmeier)
+
+- Net::Works::Network objects now overload stringification.  (Alexander
+  Hartmeier)
+
 
 0.13     2013-08-22
 
