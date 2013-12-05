@@ -557,7 +557,7 @@ Given two IP addresses as strings, this method breaks the range up into the
 largest subnets that include all the IP addresses in the range (including the
 two passed to this method).
 
-It also excludes any reserved subnets such as the
+This method also excludes any reserved subnets such as the
 L<RFC1918|http://tools.ietf.org/html/rfc1918> IPv4 private address space,
 L<RFC5735|http://tools.ietf.org/html/rfc5735> IPv4 special-use address space and
 L<RFC5156|http://tools.ietf.org/html/rfc5156> IPv6 special-use address space.
@@ -566,7 +566,7 @@ An overview can be found at the IANA
 L<IPv4|http://www.iana.org/assignments/iana-ipv4-special-registry/iana-ipv4-special-registry.xhtml>
 and
 L<IPv6|http://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xhtml>
-special-purpose address registry.
+special-purpose address registries.
 
 This method works with both IPv4 and IPv6 addresses. You can pass an explicit
 version as the final argument. If you don't, we check whether either address
