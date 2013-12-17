@@ -290,19 +290,30 @@ sub range_as_subnets {
 
 {
     my @reserved_4 = qw(
+        0.0.0.0/8
         10.0.0.0/8
+        100.64.0.0/10
         127.0.0.0/8
         169.254.0.0/16
         172.16.0.0/12
+        192.0.0.0/29
         192.0.2.0/24
         192.88.99.0/24
         192.168.0.0/16
+        198.18.0.0/15
+        198.51.100.0/24
+        203.0.113.0/24
         224.0.0.0/4
+        240.0.0.0/4
     );
 
+    # ::/128 and ::1/128 are reserved under IPv6 but these are already covered
+    # under 0.0.0.0/8
     my @reserved_6 = (
         @reserved_4, qw(
-            2001::/32
+            100::/64
+            2001::/23
+            2001:db8::/32
             fc00::/7
             fe80::/10
             ff00::/8
@@ -568,6 +579,35 @@ and
 L<IPv6|http://www.iana.org/assignments/iana-ipv6-special-registry/iana-ipv6-special-registry.xhtml>
 special-purpose address registries.
 
+The networks currently treated as reserved are:
+
+    0.0.0.0/8
+    10.0.0.0/8
+    100.64.0.0/10
+    127.0.0.0/8
+    169.254.0.0/16
+    172.16.0.0/12
+    192.0.0.0/29
+    192.0.2.0/24
+    192.88.99.0/24
+    192.168.0.0/16
+    198.18.0.0/15
+    198.51.100.0/24
+    203.0.113.0/24
+    224.0.0.0/4
+    240.0.0.0/4
+
+    100::/64
+    2001::/23
+    2001:db8::/32
+    fc00::/7
+    fe80::/10
+    ff00::/8
+
 This method works with both IPv4 and IPv6 addresses. You can pass an explicit
 version as the final argument. If you don't, we check whether either address
 contains a colon (:). If either of them does, we assume you want IPv6 subnets.
+
+When given an IPv6 range that includes the first 32 bits of addresses (the
+IPv4 space), both IPv4 I<and> IPv6 reserved networks are removed from the
+range.
