@@ -4,7 +4,7 @@
   address space in the docs. (Alexander Hartmeier)
 
 - Net::Works::Network objects now overload stringification. (Alexander
-  Hartmeier)
+  Hartmaier)
 
 - Added more reserved IPv4 and IPv6 networks to be removed from a given IP
   range and included a list of all such networks in the docs.
