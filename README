@@ -2,7 +2,7 @@ NAME
     Net::Works - Sane APIs for IP addresses and networks
 
 VERSION
-    version 0.13
+    version 0.14
 
 DESCRIPTION
     The NetAddr::IP module is very complete, correct, and useful. However,
@@ -30,7 +30,8 @@ Net::Works VERSUS NetAddr::IP
     *   Multiple constructors
 
         Net::Works allows you to construct an IP address from a string
-        ("1.2.3.4") or an integer (1097) using separate constructors.
+        ("192.0.2.1") or an integer (3221225985) using separate
+        constructors.
 
     *   Next & previous IP
 
@@ -76,6 +77,8 @@ AUTHORS
     *   Olaf Alders <oalders@wundercounter.com>
 
 CONTRIBUTORS
+    *   Alexander Hartmaier <abraxxa@cpan.org>
+
     *   TJ Mather <tjmather@maxmind.com>
 
     *   William Stevenson <wstevenson@maxmind.com>
