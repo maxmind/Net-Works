@@ -3,7 +3,7 @@
 0.14     2013-12-17
 
 - Docs were changed to only use IPv4 and IPv6 addresses from the documentation
-  address space in the docs. (Alexander Hartmeier)
+  address space in the docs. (Alexander Hartmaier)
 
 - Net::Works::Network objects now overload stringification. (Alexander
   Hartmaier)
