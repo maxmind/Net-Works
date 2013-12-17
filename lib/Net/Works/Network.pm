@@ -307,7 +307,8 @@ sub range_as_subnets {
         240.0.0.0/4
     );
 
-    # ::1/128 is reserved under IPv6 but this already covered under 0.0.0.0/8
+    # ::/128 and ::1/128 are reserved under IPv6 but these are already covered
+    # under 0.0.0.0/8
     my @reserved_6 = (
         @reserved_4, qw(
             100::/64
