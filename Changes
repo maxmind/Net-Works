@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- If you passed a Math::Int128 number to Net::Works::Network->new_from_integer
+  and specified the ip version as 4, the object would still stringify as IPv6.
+
+
 0.14     2013-12-17
 
 - Docs were changed to only use IPv4 and IPv6 addresses from the documentation
