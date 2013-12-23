@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-use Math::Int128 qw( uint128 );
+use Math::Int128 qw( uint128 uint128_to_number );
 use Net::Works::Types qw( Int IPInt IPVersion );
 use Socket qw( AF_INET AF_INET6 );
 
@@ -63,8 +63,7 @@ sub _validate_ip_integer {
         die "$int is not a valid integer for an IP address"
             if $int >= 2**32;
         if ( ref $int ) {
-            # There is no uint128_to_string function but they do stringify.
-            $self->_set_integer( $int . q{} );
+            $self->_set_integer( uint128_to_number($int) );
         }
     }
 
