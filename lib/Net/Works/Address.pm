@@ -82,10 +82,6 @@ sub new_from_integer {
     my $version = delete $p{version};
     $version ||= ref $int ? 6 : 4;
 
-    if ( $version == 4 && ref($int) ) {
-        $int = uint128_to_number($int);
-    }
-
     return $class->new(
         _integer => $int,
         version  => $version,

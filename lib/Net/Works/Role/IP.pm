@@ -62,6 +62,10 @@ sub _validate_ip_integer {
     else {
         die "$int is not a valid integer for an IP address"
             if $int >= 2**32;
+        if ( ref $int ) {
+            # There is no uint128_to_string function but they do stringify.
+            $self->_set_integer( $int . q{} );
+        }
     }
 
     return;
