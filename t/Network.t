@@ -3,6 +3,7 @@ use warnings;
 
 use Test::More 0.88;
 
+use Math::Int128 qw(uint128);
 use Net::Works::Network;
 
 {
@@ -278,6 +279,20 @@ use Net::Works::Network;
     is(
         $net->first()->as_string(), '::',
         'first address in network is ::'
+    );
+}
+
+{
+    my $int = uint128(0);
+    my $net = Net::Works::Network->new_from_integer(
+        integer     => $int,
+        mask_length => 32,
+        version     => 4,
+    );
+
+    is(
+        $net->as_string(), '0.0.0.0/32',
+        'a network created via new_from_integer with a uint128 integer and version => 4 stringifies correctly'
     );
 }
 
