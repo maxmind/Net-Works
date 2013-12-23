@@ -257,6 +257,32 @@ use Net::Works::Address;
         '1' x 128,
         'as_bit_string returns 1x128'
     );
+
+    $ip = Net::Works::Address->new_from_integer(
+        integer => uint128(1),
+        version => 4,
+    );
+
+    is(
+        $ip->as_string(),
+        '0.0.0.1',
+        'as_string returns 0.0.0.1 even when new_from_integer is given a Math::Int128 object'
+    );
+}
+
+{
+    my $e = exception {
+        Net::Works::Address->new_from_integer(
+            integer => uint128(2)**33,
+            version => 4
+        );
+    };
+
+    like(
+        $e,
+        qr/\d+ \Qis not a valid integer for an IP address/,
+        'new_from_integer blows up when giving a value larger than 2**32 -1 with version => 4'
+    );
 }
 
 {
