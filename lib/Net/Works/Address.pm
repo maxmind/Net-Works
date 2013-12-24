@@ -6,8 +6,12 @@ use warnings;
 use Carp qw( confess );
 use Math::Int128 0.06 qw( uint128 uint128_to_hex uint128_to_number );
 use Net::Works::Types qw( PackedBinary Str );
-use Net::Works::Util
-    qw( _integer_address_to_binary _string_address_to_integer _validate_ip_string );
+use Net::Works::Util qw(
+    _integer_address_to_binary
+    _integer_address_to_string
+    _string_address_to_integer
+    _validate_ip_string
+);
 use Scalar::Util qw( blessed );
 use Socket 1.99 qw( AF_INET AF_INET6 inet_pton inet_ntop );
 
@@ -92,7 +96,7 @@ sub new_from_integer {
 sub _build_string {
     my $self = shift;
 
-    return inet_ntop( $self->address_family(), $self->as_binary() );
+    return _integer_address_to_string($self->_integer());
 }
 
 sub _build_binary { _integer_address_to_binary( $_[0]->as_integer() ) }

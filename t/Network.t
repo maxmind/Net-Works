@@ -275,10 +275,10 @@ use Net::Works::Network;
 {
     my $net = Net::Works::Network->new_from_string( string => '::/0' );
 
-    is( $net->as_string(), '::/0', 'got subnet passed to constructor' );
+    is( $net->as_string(), '::0/0', 'got subnet passed to constructor' );
     is(
-        $net->first()->as_string(), '::',
-        'first address in network is ::'
+        $net->first()->as_string(), '::0',
+        'first address in network is ::0'
     );
 }
 
@@ -361,6 +361,27 @@ use Net::Works::Network;
         $net->last()->as_string(),
         ( join ':', ('ffff') x 8 ),
         q{last address for ::0/0 is all ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff}
+    );
+}
+
+{
+    my $from_string
+        = Net::Works::Network->new_from_string( string => '::0/128' );
+    is(
+        $from_string->as_string(),
+        '::0/128',
+        q{net from string '::0/128' stringifies to '::0/128'}
+    );
+
+    my $from_integer = Net::Works::Network->new_from_integer(
+        integer     => 0,
+        mask_length => 128,
+        version     => 6,
+    );
+    is(
+        $from_integer->as_string(),
+        '::0/128',
+        q{net from integer 0 (mask length 128) stringifies to '::0/128'}
     );
 }
 

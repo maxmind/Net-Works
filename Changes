@@ -3,6 +3,10 @@
 - The last address in the ::0/0 network was being returned as ::0 instead of
   ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff.
 
+- The IPv6 address ::0 is now always stringified as "::0", not "::". However,
+  either will be parsed correctly when giving an address as a string to a
+  constructor.
+
 
 0.15     2013-12-23
 

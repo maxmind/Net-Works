@@ -129,7 +129,7 @@ use Net::Works::Address;
 }
 
 {
-    for my $address (qw( 0.0.0.0 :: )) {
+    for my $address (qw( 0.0.0.0 ::0 )) {
 
         my $ip = Net::Works::Address->new_from_string( string => $address );
 
@@ -195,7 +195,7 @@ use Net::Works::Address;
 
     is(
         $ip->as_string(),
-        '::',
+        '::0',
         'new_from_integer(0), IPv6'
     );
 
