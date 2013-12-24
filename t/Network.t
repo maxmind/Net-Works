@@ -307,7 +307,7 @@ use Net::Works::Network;
         'as_string for network created via new_from_integer with 2**32'
     );
 
-    my $net = Net::Works::Network->new_from_integer(
+    $net = Net::Works::Network->new_from_integer(
         integer     => ( uint128(2)**64 ),
         mask_length => 96,
     );
@@ -317,7 +317,7 @@ use Net::Works::Network;
         'as_string for network created via new_from_integer with 2**64'
     );
 
-    my $net = Net::Works::Network->new_from_integer(
+    $net = Net::Works::Network->new_from_integer(
         integer     => ( uint128(2)**96 ),
         mask_length => 96,
     );
