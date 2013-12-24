@@ -203,10 +203,10 @@ sub first_as_integer { $_[0]->_integer() & $_[0]->_subnet_integer() }
 sub _build_last {
     my $self = shift;
 
-    my $broadcast = $self->last_as_integer;
+    my $int = $self->last_as_integer;
 
     return Net::Works::Address->new_from_integer(
-        integer => $broadcast,
+        integer => $int,
         version => $self->version(),
     );
 }
