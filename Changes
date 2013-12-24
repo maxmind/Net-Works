@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- The last address in the ::0/0 network was being returned as ::0 instead of
+  ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff.
+
+
 0.15     2013-12-23
 
 - If you passed a Math::Int128 number to Net::Works::Network->new_from_integer

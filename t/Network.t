@@ -328,6 +328,42 @@ use Net::Works::Network;
     );
 }
 
+{
+    my $net = Net::Works::Network->new_from_string( string => '128.0.0.0/1' );
+
+    is(
+        $net->last()->as_string(),
+        '255.255.255.255',
+        'last address for 128.0.0.0/1 is 255.255.255.255'
+    );
+
+    $net = Net::Works::Network->new_from_string( string => '0.0.0.0/0' );
+
+    is(
+        $net->last()->as_string(),
+        '255.255.255.255',
+        'last address for 0.0.0.0/0 is 255.255.255.255'
+    );
+}
+
+{
+    my $net = Net::Works::Network->new_from_string( string => '8000::/1' );
+
+    is(
+        $net->last()->as_string(),
+        ( join ':', ('ffff') x 8 ),
+        q{last address for 8000:/1 is all ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff}
+    );
+
+    $net = Net::Works::Network->new_from_string( string => '::0/0' );
+
+    is(
+        $net->last()->as_string(),
+        ( join ':', ('ffff') x 8 ),
+        q{last address for ::0/0 is all ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff}
+    );
+}
+
 sub _test_iterator {
     my $net              = shift;
     my $expect_count     = shift;
