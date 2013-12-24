@@ -296,6 +296,38 @@ use Net::Works::Network;
     );
 }
 
+{
+    my $net = Net::Works::Network->new_from_integer(
+        integer     => ( uint128(2)**32 ),
+        mask_length => 96,
+    );
+
+    is(
+        $net->as_string(), '::1:0:0/96',
+        'as_string for network created via new_from_integer with 2**32'
+    );
+
+    my $net = Net::Works::Network->new_from_integer(
+        integer     => ( uint128(2)**64 ),
+        mask_length => 96,
+    );
+
+    is(
+        $net->as_string(), '0:0:0:1::/96',
+        'as_string for network created via new_from_integer with 2**64'
+    );
+
+    my $net = Net::Works::Network->new_from_integer(
+        integer     => ( uint128(2)**96 ),
+        mask_length => 96,
+    );
+
+    is(
+        $net->as_string(), '0:1::/96',
+        'as_string for network created via new_from_integer with 2**96'
+    );
+}
+
 sub _test_iterator {
     my $net              = shift;
     my $expect_count     = shift;
