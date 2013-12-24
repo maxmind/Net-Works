@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean;
 
-use Math::Int128 qw( uint128 uint128_to_number );
+use Math::Int128 qw( string_to_uint128 uint128 uint128_to_number );
 use Net::Works::Types qw( Int IPInt IPVersion );
 use Socket qw( AF_INET AF_INET6 );
 
@@ -35,7 +35,7 @@ has address_family => (
 {
     my %max = (
         4 => 0xFFFFFFFF,
-        6 => uint128(0) - 1,
+        6 => string_to_uint128( '0x' . ( 'F' x 32 ) ),
     );
 
     sub _max {
