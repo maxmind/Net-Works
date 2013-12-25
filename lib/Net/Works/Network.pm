@@ -142,7 +142,11 @@ sub _mask_length_to_mask {
     my $self    = shift;
     my $masklen = shift;
 
-    return $self->_max() & ( $self->_max() << ( $self->bits - $masklen ) );
+    # We need to special case 0 because left shifting a 128-bit integer by 128
+    # bits does not produce 0.
+    return $self->mask_length() == 0
+        ? 0
+        : $self->_max() & ( $self->_max() << ( $self->bits - $masklen ) );
 }
 
 sub max_mask_length {
@@ -214,12 +218,7 @@ sub _build_last {
 sub last_as_integer {
     my $self = shift;
 
-    # We need to special case ::0/0 to avoid either an overflow or a bug with
-    # Math::Int128 (I'm not sure) - the ~$self->_subnet_integer() value ends
-    # up being 0 in this case.
-    return $self->_integer() == 0 && $self->mask_length() == 0
-        ? $self->_max()
-        : $self->_integer() | ( $self->_max() & ~$self->_subnet_integer() );
+    return $self->_integer() | ( $self->_max() & ~$self->_subnet_integer() );
 }
 
 sub contains {
