@@ -493,6 +493,9 @@ need this unless you're trying to force a dotted quad to be interpreted as an
 IPv6 network or to a force an IPv6 address colon-separated hex number to be
 interpreted as an IPv4 network.
 
+If you pass an IPv4 network but specify the version as C<6> then we will add
+96 to the netmask.
+
 =head2 Net::Works::Network->new_from_integer( ... )
 
 This method takes an C<integer> parameter, C<mask_length> parameter, and
@@ -500,6 +503,9 @@ an optional C<version> parameter. The C<integer> parameter should be an
 integer representation of an IP within the subnet. The C<mask_length>
 parameter should be an integer between 0 and 32 for IPv4 or 0 and 128 for
 IPv6. The C<version> parameter should be either C<4> or C<6>.
+
+Note that if you are passing an IPv4 address that you want treated as an IPv6
+address you need to manually add 96 to the C<mask_length> yourself.
 
 =head2 $network->as_string()
 
