@@ -53,7 +53,7 @@ has _address_string => (
     isa      => Str,
     init_arg => undef,
     lazy     => 1,
-    builder  => '_build_address_string'
+    builder  => '_build_address_string',
 );
 
 has _subnet_integer => (
@@ -70,7 +70,7 @@ sub BUILD {
     $self->_validate_ip_integer();
 
     my $max = $self->bits();
-    if ( $self->mask_length() < 0 || $self->mask_length() > $max ) {
+    if ( $self->mask_length() > $max ) {
         die $self->mask_length() . ' is not a valid IP network mask length';
     }
 
@@ -102,7 +102,7 @@ sub new_from_string {
             unless defined $integer;
     }
     else {
-        die "undef is not a valid IP network";
+        die 'undef is not a valid IP network';
     }
 
     return $class->new(

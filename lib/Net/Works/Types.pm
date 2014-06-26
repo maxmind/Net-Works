@@ -21,7 +21,7 @@ our @EXPORT_OK = qw(
 {
     my $t = quote_sub(
         q{
-( defined $_[0] && !ref $_[0] && $_[0] =~ /^[0-9]+$/ )
+( defined $_[0] && !ref $_[0] && $_[0] =~ /^[0-9]+\z/ )
     or Net::Works::Types::_confess(
     '%s is not a valid integer for an IP address',
     $_[0]
@@ -36,7 +36,7 @@ our @EXPORT_OK = qw(
     my $t = quote_sub(
         q{
 (
-    defined $_[0] && ( ( !ref $_[0] && $_[0] =~ /^[0-9]+$/ )
+    defined $_[0] && ( ( !ref $_[0] && $_[0] =~ /^[0-9]+\z/ )
         || ( Scalar::Util::blessed( $_[0] ) && $_[0]->isa('Math::UInt128') ) )
     )
     or Net::Works::Types::_confess(
@@ -66,7 +66,7 @@ our @EXPORT_OK = qw(
 {
     my $t = quote_sub(
         q{
-( !ref $_[0] && $_[0] >= 0 && $_[0] <= 128 )
+( !ref $_[0] && $_[0] =~ /^[0-9]+\z/ && $_[0] <= 128 )
     or Net::Works::Types::_confess(
     '%s is not a valid IP network mask length (0-128)', $_[0] );
 }
