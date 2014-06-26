@@ -133,7 +133,8 @@ use Net::Works::Network;
 }
 
 {
-    for my $bad (qw( 1.1.1.1/-1 1.1.1.1/33 )) {
+    for my $bad ( '1.1.1.1/-1', '1.1.1.1/33', '1.1.1.0/24;', "1.1.1.0/24\n", )
+    {
         like(
             exception {
                 Net::Works::Network->new_from_string(
@@ -142,7 +143,7 @@ use Net::Works::Network;
                 );
             },
             qr/\Qis not a valid IP network mask length/,
-            "Net::Works::Address->new_from_string() died with bad mask (v4)"
+            "Net::Works::Address->new_from_string( string => $bad, version => 4) died with bad mask"
         );
     }
 
