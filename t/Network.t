@@ -16,9 +16,9 @@ use Net::Works::Network;
     );
 
     is(
-        $net->mask_length(),
+        $net->prefix_length(),
         28,
-        'netmask is 28'
+        'prefix_length is 28'
     );
 
     my $first = $net->first();
@@ -61,7 +61,8 @@ use Net::Works::Network;
 }
 
 {
-    my $net = Net::Works::Network->new_from_string( string => 'ffff::1200/120' );
+    my $net
+        = Net::Works::Network->new_from_string( string => 'ffff::1200/120' );
 
     is(
         $net->as_string(),
@@ -70,9 +71,9 @@ use Net::Works::Network;
     );
 
     is(
-        $net->mask_length(),
+        $net->prefix_length(),
         120,
-        'netmask is 120',
+        'prefix_length is 120',
     );
 
     my $first = $net->first();
@@ -151,9 +152,9 @@ use Net::Works::Network;
         my $net = Net::Works::Network->new_from_string( string => $subnet );
 
         is(
-            $net->max_mask_length(),
+            $net->max_prefix_length(),
             $tests{$subnet},
-            "max_mask_length for $subnet is $tests{$subnet}"
+            "max_prefix_length for $subnet is $tests{$subnet}"
         );
     }
 }
@@ -271,7 +272,6 @@ use Net::Works::Network;
     );
 }
 
-
 {
     my $net = Net::Works::Network->new_from_string( string => '::/0' );
 
@@ -285,9 +285,9 @@ use Net::Works::Network;
 {
     my $int = uint128(0);
     my $net = Net::Works::Network->new_from_integer(
-        integer     => $int,
-        mask_length => 32,
-        version     => 4,
+        integer       => $int,
+        prefix_length => 32,
+        version       => 4,
     );
 
     is(
@@ -298,8 +298,8 @@ use Net::Works::Network;
 
 {
     my $net = Net::Works::Network->new_from_integer(
-        integer     => ( uint128(2)**32 ),
-        mask_length => 96,
+        integer       => ( uint128(2)**32 ),
+        prefix_length => 96,
     );
 
     is(
@@ -308,8 +308,8 @@ use Net::Works::Network;
     );
 
     $net = Net::Works::Network->new_from_integer(
-        integer     => ( uint128(2)**64 ),
-        mask_length => 96,
+        integer       => ( uint128(2)**64 ),
+        prefix_length => 96,
     );
 
     is(
@@ -318,8 +318,8 @@ use Net::Works::Network;
     );
 
     $net = Net::Works::Network->new_from_integer(
-        integer     => ( uint128(2)**96 ),
-        mask_length => 96,
+        integer       => ( uint128(2)**96 ),
+        prefix_length => 96,
     );
 
     is(
@@ -374,14 +374,14 @@ use Net::Works::Network;
     );
 
     my $from_integer = Net::Works::Network->new_from_integer(
-        integer     => 0,
-        mask_length => 128,
-        version     => 6,
+        integer       => 0,
+        prefix_length => 128,
+        version       => 6,
     );
     is(
         $from_integer->as_string(),
         '::0/128',
-        q{net from integer 0 (mask length 128) stringifies to '::0/128'}
+        q{net from integer 0 (prefix length 128) stringifies to '::0/128'}
     );
 }
 

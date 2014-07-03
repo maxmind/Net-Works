@@ -578,11 +578,11 @@ sub _test_range_as_subnets {
             "subnet last matches expected last - split $start - $end ($last)"
         );
 
-        my $netmask = $expect->mask_length();
+        my $prefix_length = $expect->prefix_length();
         is(
-            $got->mask_length(),
-            $netmask,
-            "netmask matches expected netmask - split $start - $end ($netmask)"
+            $got->prefix_length(),
+            $prefix_length,
+            "prefix length matches expected value - split $start - $end ($prefix_length)"
         );
     }
 }

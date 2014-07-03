@@ -12,7 +12,7 @@ our @EXPORT_OK = qw(
     Int
     IPInt
     IPVersion
-    MaskLength
+    PrefixLength
     NetWorksAddress
     PackedBinary
     Str
@@ -68,11 +68,11 @@ our @EXPORT_OK = qw(
         q{
 ( !ref $_[0] && $_[0] =~ /^[0-9]+\z/ && $_[0] <= 128 )
     or Net::Works::Types::_confess(
-    '%s is not a valid IP network mask length (0-128)', $_[0] );
+    '%s is not a valid IP network prefix length (0-128)', $_[0] );
 }
     );
 
-    sub MaskLength () { $t }
+    sub PrefixLength () { $t }
 }
 
 {

@@ -131,7 +131,9 @@ sub as_bit_string {
     }
 }
 
-sub mask_length { $_[0]->bits() }
+sub prefix_length { $_[0]->bits() }
+
+sub mask_length { $_[0]->prefix_length() }
 
 sub next_ip {
     my $self = shift;
@@ -190,7 +192,7 @@ __END__
   print $ip->as_binary();     # 4-byte packed form of the address
   print $ip->as_bit_string(); # 11000000000000000000001000000001
   print $ip->version();       # 4
-  print $ip->mask_length();   # 32
+  print $ip->prefix_length();   # 32
 
   my $next = $ip->next_ip();     # 192.0.2.2
   my $prev = $ip->previous_ip(); # 192.0.2.0
@@ -269,14 +271,14 @@ of an IPv4 address (2**32 - 1). It's primarily useful for debugging.
 
 Returns a 4 or 6 to indicate whether this is an IPv4 or IPv6 address.
 
-=head2 $ip->mask_length()
+=head2 $ip->prefix_length()
 
-Returns the mask length for the IP address, which is either 32 (IPv4) or 128
+Returns the prefix length for the IP address, which is either 32 (IPv4) or 128
 (IPv6).
 
 =head2 $ip->bits()
 
-An alias for C<< $ip->mask_length() >>. This helps make addresses & network
+An alias for C<< $ip->prefix_length() >>. This helps make addresses & network
 objects interchangeable in some cases.
 
 =head2 $ip->next_ip()
