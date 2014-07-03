@@ -96,7 +96,7 @@ sub new_from_integer {
 sub _build_string {
     my $self = shift;
 
-    return _integer_address_to_string($self->_integer());
+    return _integer_address_to_string( $self->_integer() );
 }
 
 sub _build_binary { _integer_address_to_binary( $_[0]->as_integer() ) }
@@ -123,7 +123,7 @@ sub as_bit_string {
 
     if ( $self->version == 6 ) {
         my $hex = uint128_to_hex( $self->as_integer() );
-        my @ha = $hex =~ /.{8}/g;
+        my @ha  = $hex =~ /.{8}/g;
         return join '', map { sprintf( '%032b', hex($_) ) } @ha;
     }
     else {
