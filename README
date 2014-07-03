@@ -2,7 +2,7 @@ NAME
     Net::Works - Sane APIs for IP addresses and networks
 
 VERSION
-    version 0.16
+    version 0.17
 
 DESCRIPTION
     The NetAddr::IP module is very complete, correct, and useful. However,
@@ -23,9 +23,9 @@ Net::Works VERSUS NetAddr::IP
         "Net::Works" provides two classes, one for single IP addresses and
         one for networks (and subnets). With NetAddr::IP a single address is
         represented as a /32 or /128 subnet. This is technically correct but
-        can make the API harder to as whenever you want a single IP you're
+        can make the API harder to use. Whenever you want a single IP you're
         always stuck checking that the object you're working with is the
-        size subnet.
+        size of a single address subnet.
 
     *   Multiple constructors
 
@@ -84,7 +84,7 @@ CONTRIBUTORS
     *   William Stevenson <wstevenson@maxmind.com>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2013 by MaxMind, Inc..
+    This software is copyright (c) 2014 by MaxMind, Inc..
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

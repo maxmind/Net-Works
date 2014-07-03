@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.17     2014-07-03
+
 - The mask_length attribute (and related methods) in Net::Works::Network has
   been renamed to prefix_length, which is more correct and consistent with the
   terminology used for IPv6. The old names (and methods) are still available,
