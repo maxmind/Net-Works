@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 
+use B;
 use Math::Int128 qw( uint128 );
 use Test::Fatal;
 use Test::More 0.88;
@@ -133,8 +134,9 @@ use Net::Works::Network;
 }
 
 {
-    for my $bad ( '1.1.1.1/-1', '1.1.1.1/33', '1.1.1.0/24;', "1.1.1.0/24\n", )
+    for my $bad ( '1.1.1.1/-1', '1.1.1.1/33', '1.1.1.0/24;', "1.1.1.0/24\n" )
     {
+        my $safe_bad = B::perlstring($bad);
         like(
             exception {
                 Net::Works::Network->new_from_string(
@@ -143,11 +145,12 @@ use Net::Works::Network;
                 );
             },
             qr/\Qis not a valid IP network mask length/,
-            "Net::Works::Address->new_from_string( string => $bad, version => 4) died with bad mask"
+            "Net::Works::Address->new_from_string( string => $safe_bad, version => 4 ) died with bad mask"
         );
     }
 
-    for my $bad (qw( ::1/-1 ::1/129 )) {
+    for my $bad ( '::1/-1', '::1/129', '::1/120;', "::1/120\n" ) {
+        my $safe_bad = B::perlstring($bad);
         like(
             exception {
                 Net::Works::Network->new_from_string(
@@ -156,7 +159,7 @@ use Net::Works::Network;
                 );
             },
             qr/\Qis not a valid IP network mask length/,
-            "Net::Works::Address->new_from_string() died with bad mask (v6)"
+            "Net::Works::Address->new_from_string( string => $safe_bad, version => 6 ) died with bad mask"
         );
     }
 }
