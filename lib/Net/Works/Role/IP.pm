@@ -2,7 +2,7 @@ package Net::Works::Role::IP;
 
 use strict;
 use warnings;
-use namespace::autoclean;
+use namespace::autoclean 0.16;
 
 use Math::Int128 qw( string_to_uint128 uint128 uint128_to_number );
 use Net::Works::Types qw( Int IPInt IPVersion );

@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Require namespace::autoclean 0.16+ so our classes are not inflated from Moo
+  to Moose classes. Fixes GH #6.
+
+
 0.16     2013-12-25
 
 - The last address in the ::0/0 network was being returned as ::0 instead of
