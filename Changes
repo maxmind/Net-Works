@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+- Fixed warnings that would happen when trying to validate some bad data. This
+  could happen if you passed a string with no slash (/)_to
+  Net::Works::Network->new_from_string.
+
+
 0.17     2014-07-03
 
 - The mask_length attribute (and related methods) in Net::Works::Network has

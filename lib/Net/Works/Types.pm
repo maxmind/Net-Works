@@ -41,7 +41,7 @@ our @EXPORT_OK = qw(
     )
     or Net::Works::Types::_confess(
     '%s is not a valid integer for an IP address',
-    $_[0]
+    defined $_[0] ? $_[0] : 'undef'
     );
 }
     );
@@ -55,7 +55,7 @@ our @EXPORT_OK = qw(
 ( defined $_[0] && !ref $_[0] && ( $_[0] == 4 || $_[0] == 6 ) )
     or Net::Works::Types::_confess(
     '%s is not a valid IP version (4 or 6)',
-    $_[0]
+    defined $_[0] ? $_[0] : 'undef'
     );
         }
     );
@@ -66,9 +66,11 @@ our @EXPORT_OK = qw(
 {
     my $t = quote_sub(
         q{
-( !ref $_[0] && $_[0] =~ /^[0-9]+\z/ && $_[0] <= 128 )
+( !ref $_[0] && defined $_[0] && $_[0] =~ /^[0-9]+\z/ && $_[0] <= 128 )
     or Net::Works::Types::_confess(
-    '%s is not a valid IP network prefix length (0-128)', $_[0] );
+    '%s is not a valid IP network prefix length (0-128)',
+    defined $_[0] ? $_[0] : 'undef'
+    );
 }
     );
 
