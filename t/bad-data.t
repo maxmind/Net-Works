@@ -134,8 +134,11 @@ use Net::Works::Network;
 }
 
 {
-    for my $bad ( '1.1.1.1/-1', '1.1.1.1/33', '1.1.1.0/24;', "1.1.1.0/24\n" )
-    {
+    for my $bad (
+        '1.1.1.1/-1', '1.1.1.1/33', '1.1.1.0/24;', "1.1.1.0/24\n",
+        '1.1.1.1/',   '1.1.1.1',
+        ) {
+
         my $safe_bad = B::perlstring($bad);
         like(
             exception {
@@ -149,7 +152,24 @@ use Net::Works::Network;
         );
     }
 
-    for my $bad ( '::1/-1', '::1/129', '::1/120;', "::1/120\n" ) {
+    for my $bad ( undef, 'whatever', '1.1.1' ) {
+        my $safe_bad = B::perlstring($bad);
+        like(
+            exception {
+                Net::Works::Network->new_from_string(
+                    string  => $bad,
+                    version => 4,
+                );
+            },
+            qr/\Qis not a valid IP network/,
+            "Net::Works::Address->new_from_string( string => $safe_bad, version => 4 ) died with bad prefix"
+        );
+    }
+
+    for my $bad (
+        '::1/-1', '::1/129', '::1/120;', "::1/120\n", '::1.1.1.1', '::1000',
+        ) {
+
         my $safe_bad = B::perlstring($bad);
         like(
             exception {
@@ -162,5 +182,20 @@ use Net::Works::Network;
             "Net::Works::Address->new_from_string( string => $safe_bad, version => 6 ) died with bad prefix"
         );
     }
+
+    for my $bad ( undef, 'whatever' ) {
+        my $safe_bad = B::perlstring($bad);
+        like(
+            exception {
+                Net::Works::Network->new_from_string(
+                    string  => $bad,
+                    version => 6,
+                );
+            },
+            qr/\Qis not a valid IP network/,
+            "Net::Works::Address->new_from_string( string => $safe_bad, version => 6 ) died with bad prefix"
+        );
+    }
 }
+
 done_testing();
