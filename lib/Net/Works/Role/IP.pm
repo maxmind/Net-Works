@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean 0.16;
 
+use Carp qw( confess );
 use Math::Int128 qw( string_to_uint128 uint128 uint128_to_number );
 use Net::Works::Types qw( Int IPInt IPVersion );
 use Socket qw( AF_INET AF_INET6 );
@@ -60,7 +61,7 @@ sub _validate_ip_integer {
             unless ref $int;
     }
     else {
-        die "$int is not a valid integer for an IP address"
+        confess("$int is not a valid integer for an IP address")
             if $int >= 2**32;
         if ( ref $int ) {
             $self->_set_integer( uint128_to_number($int) );

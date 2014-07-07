@@ -3,6 +3,7 @@ package Net::Works::Network;
 use strict;
 use warnings;
 
+use Carp qw( confess );
 use List::AllUtils qw( any );
 use Math::Int128 qw( uint128 );
 use Net::Works::Address;
@@ -84,7 +85,7 @@ sub BUILD {
 
     my $max = $self->bits();
     if ( $self->prefix_length() > $max ) {
-        die $self->prefix_length()
+        confess $self->prefix_length()
             . ' is not a valid IP network prefix length';
     }
 
@@ -114,11 +115,11 @@ sub new_from_string {
 
         $integer = _string_address_to_integer( $address, $version );
 
-        die "$p{string} is not a valid IP network"
+        confess "$p{string} is not a valid IP network"
             unless defined $integer;
     }
     else {
-        die 'undef is not a valid IP network';
+        confess 'undef is not a valid IP network';
     }
 
     return $class->new(
@@ -254,7 +255,7 @@ sub contains {
         $last_integer  = $thing->last_as_integer();
     }
     else {
-        die
+        confess
             "$thing is not a Net::Works::Address or Net::Works::Network object";
     }
 
