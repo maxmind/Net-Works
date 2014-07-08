@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.18     2014-07-08
+
 - Fixed warnings that would happen when trying to validate some bad data. This
   could happen if you passed a string with no slash (/)_to
   Net::Works::Network->new_from_string.

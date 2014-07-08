@@ -2,7 +2,7 @@ NAME
     Net::Works - Sane APIs for IP addresses and networks
 
 VERSION
-    version 0.17
+    version 0.18
 
 DESCRIPTION
     The NetAddr::IP module is very complete, correct, and useful. However,
@@ -78,6 +78,8 @@ AUTHORS
 
 CONTRIBUTORS
     *   Alexander Hartmaier <abraxxa@cpan.org>
+
+    *   Gregory Oschwald <oschwald@gmail.com>
 
     *   TJ Mather <tjmather@maxmind.com>
 
