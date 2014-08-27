@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- Fixed validation when a string with more than one slash (/) is passed to
+  Net::Works::Network->new_from_string.
+
+
 0.18     2014-07-08
 
 - Fixed warnings that would happen when trying to validate some bad data. This
