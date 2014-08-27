@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.19     2014-08-27
+
 - Fixed validation when a string with more than one slash (/) is passed to
   Net::Works::Network->new_from_string.
 
