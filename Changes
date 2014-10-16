@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.20     2014-10-16
+
 - Added numeric & string comparison overloading to Net::Works::Network.
 
 - Added string comparison overloading to Net::Works::Address.
