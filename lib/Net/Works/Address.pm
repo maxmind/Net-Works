@@ -25,6 +25,7 @@ use integer;
 use overload (
     q{""} => '_overloaded_as_string',
     '<=>' => '_compare_overload',
+    'cmp' => '_compare_overload',
 );
 
 use Moo;
@@ -299,7 +300,7 @@ its IP range (address 0).
 
 =head1 OVERLOADING
 
-This class overloads numeric comparison, allowing you to compare two objects
-numerically and to sort them.
+This class overloads comparison, allowing you to compare two objects and to
+sort them (either as numbers or strings).
 
 It also overloads stringification to call the C<< $ip->as_string() >> method.

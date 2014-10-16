@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+- Added numeric & string comparison overloading to Net::Works::Network.
+
+- Added string comparison overloading to Net::Works::Address.
+
+
 0.19     2014-08-27
 
 - Fixed validation when a string with more than one slash (/) is passed to

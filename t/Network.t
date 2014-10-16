@@ -58,6 +58,81 @@ use Net::Works::Network;
         '1.1.1.0/28',
         'stringification of network object works'
     );
+
+    my $greater
+        = Net::Works::Network->new_from_string( string => '2.0.0.0/24' );
+
+    cmp_ok(
+        $net, '<', $greater,
+        'numeric overloading (<) on network objects works'
+    );
+
+    cmp_ok(
+        $greater, '>', $net,
+        'numeric overloading (>) on network objects works'
+    );
+
+    my $same_net
+        = Net::Works::Network->new_from_string( string => '1.1.1.0/28' );
+
+    cmp_ok(
+        $net, '==', $same_net,
+        'numeric overloading (==) on network objects works'
+    );
+
+    is(
+        $net <=> $same_net,
+        0,
+        'comparison overloading (==) on network objects works'
+    );
+
+    my $greater_prefix = Net::Works::Network->new_from_string( string => '1.1.1.0/29' );
+
+    cmp_ok(
+        $net, '<', $greater_prefix,
+        'numeric overloading (<) on network objects works (based on prefix length)'
+    );
+
+    cmp_ok(
+        $greater_prefix, '>', $net,
+        'numeric overloading (>) on network objects works (based on prefix length)'
+    );
+}
+
+{
+    my @networks
+        = map { Net::Works::Network->new_from_string( string => $_ ) }
+        qw(
+        ::123.0.0.4/128
+        2003::/96
+        ::1.2.3.0/124
+        abcd::1000/116
+        ::255.255.0.0/112
+        ::127.0.98.0/124
+        ::127.0.98.0/120
+    );
+
+    my @sorted = qw(
+        ::1.2.3.0/124
+        ::123.0.0.4/128
+        ::127.0.98.0/120
+        ::127.0.98.0/124
+        ::255.255.0.0/112
+        2003::/96
+        abcd::1000/116
+    );
+
+    is_deeply(
+        [ map { $_->as_string() } sort { $a <=> $b } @networks ],
+        \@sorted,
+        'network objects sort numerically'
+    );
+
+    is_deeply(
+        [ map { $_->as_string() } sort { $a cmp $b } @networks ],
+        \@sorted,
+        'network objects sort alphabetically'
+    );
 }
 
 {
