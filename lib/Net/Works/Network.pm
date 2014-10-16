@@ -10,6 +10,7 @@ use Net::Works::Address;
 use Net::Works::Types qw( IPInt PrefixLength NetWorksAddress Str );
 use Net::Works::Util
     qw( _integer_address_to_string _string_address_to_integer );
+use Scalar::Util qw( blessed );
 use Socket 1.99 qw( inet_pton AF_INET AF_INET6 );
 
 use integer;
@@ -21,6 +22,8 @@ use integer;
 
 use overload (
     q{""} => '_overloaded_as_string',
+    '<=>' => '_compare_overload',
+    'cmp' => '_compare_overload',
 );
 
 use Moo;
@@ -440,6 +443,25 @@ sub _max_subnet {
     );
 }
 
+sub _compare_overload {
+    my $self  = shift;
+    my $other = shift;
+
+    confess 'Cannot compare unless both objects are '
+        . __PACKAGE__
+        . ' objects'
+        unless blessed $self
+        && blessed $other
+        && eval { $self->isa(__PACKAGE__) && $other->isa(__PACKAGE__) };
+
+    my $cmp = (
+               $self->first() <=> $other->first()
+            or $self->prefix_length() <=> $other->prefix_length()
+    );
+
+    return shift() ? $cmp * -1 : $cmp;
+}
+
 __PACKAGE__->meta()->make_immutable();
 
 1;
@@ -636,6 +658,16 @@ contains a colon (:). If either of them does, we assume you want IPv6 subnets.
 When given an IPv6 range that includes the first 32 bits of addresses (the
 IPv4 space), both IPv4 I<and> IPv6 reserved networks are removed from the
 range.
+
+=head1 OVERLOADING
+
+This class overloads comparison, allowing you to compare two objects and to
+sort them (either as numbers or strings). Objects are compared based on the
+first IP address in their networks, and then by prefix length if they have the
+same starting address.
+
+It also overloads stringification to call the C<< $network->as_string() >>
+method.
 
 =head1 DEPRECATED METHODS AND ATTRIBUTES
 

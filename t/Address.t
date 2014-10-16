@@ -72,6 +72,40 @@ use Net::Works::Address;
 }
 
 {
+    my @ips = map { Net::Works::Address->new_from_string( string => $_ ) } qw(
+        ::123.0.0.4
+        ::1.2.3.4
+        2003::
+        ::255.255.255.255
+        abcd::1000
+        ::127.0.98.25
+        ::127.0.98.24
+    );
+
+    my @sorted = qw(
+        ::1.2.3.4
+        ::123.0.0.4
+        ::127.0.98.24
+        ::127.0.98.25
+        ::255.255.255.255
+        2003::
+        abcd::1000
+    );
+
+    is_deeply(
+        [ map { $_->as_string() } sort { $a <=> $b } @ips ],
+        \@sorted,
+        'address objects sort numerically'
+    );
+
+    is_deeply(
+        [ map { $_->as_string() } sort { $a cmp $b } @ips ],
+        \@sorted,
+        'address objects sort alphabetically'
+    );
+}
+
+{
     my $ip = Net::Works::Address->new_from_string( string => '192.168.0.255' )
         ->next_ip();
     is(
