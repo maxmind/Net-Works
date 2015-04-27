@@ -4,6 +4,7 @@ use warnings;
 use Test::More 0.88;
 
 use Math::Int128 qw(uint128);
+use Net::Works::Address;
 use Net::Works::Network;
 
 {
@@ -21,28 +22,28 @@ use Net::Works::Network;
         'prefix_length is 28'
     );
 
-    my $first = $net->first();
+    my $first_ip = $net->first();
     isa_ok(
-        $first,
+        $first_ip,
         'Net::Works::Address',
         'return value of ->first'
     );
 
     is(
-        $first->as_string(),
+        $first_ip->as_string(),
         '1.1.1.0',
         '->first returns the correct IP address'
     );
 
-    my $last = $net->last();
+    my $last_ip = $net->last();
     isa_ok(
-        $last,
+        $last_ip,
         'Net::Works::Address',
         'return value of ->last'
     );
 
     is(
-        $last->as_string(),
+        $last_ip->as_string(),
         '1.1.1.15',
         '->last returns the correct IP address'
     );
@@ -86,7 +87,8 @@ use Net::Works::Network;
         'comparison overloading (==) on network objects works'
     );
 
-    my $greater_prefix = Net::Works::Network->new_from_string( string => '1.1.1.0/29' );
+    my $greater_prefix
+        = Net::Works::Network->new_from_string( string => '1.1.1.0/29' );
 
     cmp_ok(
         $net, '<', $greater_prefix,
@@ -151,28 +153,28 @@ use Net::Works::Network;
         'prefix_length is 120',
     );
 
-    my $first = $net->first();
+    my $first_ip = $net->first();
     isa_ok(
-        $first,
+        $first_ip,
         'Net::Works::Address',
         'return value of ->first'
     );
 
     is(
-        $first->as_string(),
+        $first_ip->as_string(),
         'ffff::1200',
         '->first returns the correct IP address'
     );
 
-    my $last = $net->last();
+    my $last_ip = $net->last();
     isa_ok(
-        $last,
+        $last_ip,
         'Net::Works::Address',
         'return value of ->last'
     );
 
     is(
-        $last->as_string(),
+        $last_ip->as_string(),
         'ffff::12ff',
         '->last returns the correct IP address'
     );
@@ -180,7 +182,7 @@ use Net::Works::Network;
     _test_iterator(
         $net,
         256,
-        [ map { sprintf( "ffff::12%02x", $_ ) } 0 .. 255 ],
+        [ map { sprintf( 'ffff::12%02x', $_ ) } 0 .. 255 ],
     );
 }
 

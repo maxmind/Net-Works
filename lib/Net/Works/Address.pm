@@ -127,7 +127,7 @@ sub as_bit_string {
     if ( $self->version == 6 ) {
         my $hex = uint128_to_hex( $self->as_integer() );
         my @ha  = $hex =~ /.{8}/g;
-        return join '', map { sprintf( '%032b', hex($_) ) } @ha;
+        return join q{}, map { sprintf( '%032b', hex($_) ) } @ha;
     }
     else {
         return sprintf( '%032b', $self->as_integer() );

@@ -5,6 +5,7 @@ use Test::More 0.88;
 
 use List::AllUtils qw( each_array );
 use Math::Int128 qw(uint128);
+use Net::Works::Address;
 use Net::Works::Network;
 
 {
@@ -508,16 +509,17 @@ sub _test_remove_reserved_subnets {
 
     # All these conversions are gross but normally this is handled by the
     # range_as_subnets method.
-    my $first = Net::Works::Address->new_from_string(
+    my $first_ip = Net::Works::Address->new_from_string(
         string  => $range->[0],
         version => $version,
     )->as_integer();
 
-    my $last = Net::Works::Address->new_from_string(
+    my $last_ip = Net::Works::Address->new_from_string(
         string  => $range->[1],
         version => $version
     )->as_integer();
 
+    ## no critic (Subroutines::ProtectPrivateSubs)
     my @got = map {
         [
             map {
@@ -528,8 +530,8 @@ sub _test_remove_reserved_subnets {
             } @{$_}
         ]
         } Net::Works::Network->_remove_reserved_subnets_from_range(
-        $first,
-        $last,
+        $first_ip,
+        $last_ip,
         $version,
         );
 
@@ -560,22 +562,22 @@ sub _test_range_as_subnets {
     while ( my ( $got, $expect ) = $iter->() ) {
         last unless $got && $expect;
 
-        my $first = eval { $expect->first()->as_ipv4_string() }
+        my $first_ip = eval { $expect->first()->as_ipv4_string() }
             // $expect->first()->as_string();
 
         is(
             $got->first()->as_string(),
             $expect->first()->as_string(),
-            "subnet first matches expected first - split $start - $end ($first)"
+            "subnet first matches expected first - split $start - $end ($first_ip)"
         );
 
-        my $last = eval { $expect->last()->as_ipv4_string() }
+        my $last_ip = eval { $expect->last()->as_ipv4_string() }
             // $expect->last()->as_string();
 
         is(
             $got->last()->as_string(),
             $expect->last()->as_string(),
-            "subnet last matches expected last - split $start - $end ($last)"
+            "subnet last matches expected last - split $start - $end ($last_ip)"
         );
 
         my $prefix_length = $expect->prefix_length();

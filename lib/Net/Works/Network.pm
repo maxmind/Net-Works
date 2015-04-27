@@ -103,7 +103,7 @@ sub new_from_string {
 
     die 'undef is not a valid IP network' unless defined $p{string};
 
-    my ( $address, $prefix_length ) = split '/', $p{string}, 2;
+    my ( $address, $prefix_length ) = split /\//, $p{string}, 2;
 
     my $version
         = $p{version} ? $p{version}
@@ -189,15 +189,15 @@ sub max_mask_length { $_[0]->max_prefix_length() }
 sub iterator {
     my $self = shift;
 
-    my $version = $self->version();
-    my $current = $self->first()->as_integer();
-    my $last    = $self->last()->as_integer();
+    my $version    = $self->version();
+    my $current_ip = $self->first()->as_integer();
+    my $last_ip    = $self->last()->as_integer();
 
     return sub {
-        return if $current > $last;
+        return if $current_ip > $last_ip;
 
         Net::Works::Address->new_from_integer(
-            integer => $current++,
+            integer => $current_ip++,
             version => $version,
         );
     };
@@ -261,6 +261,7 @@ sub contains {
         && $last_integer <= $self->last_as_integer();
 }
 
+## no critic (Subroutines::ProhibitBuiltinHomonyms)
 sub split {
     my $self = shift;
 
@@ -281,26 +282,27 @@ sub split {
         )
     );
 }
+## use critic
 
 sub range_as_subnets {
-    my $class   = shift;
-    my $first   = shift;
-    my $last    = shift;
-    my $version = shift || ( any { /:/ } $first, $last ) ? 6 : 4;
+    my $class    = shift;
+    my $first_ip = shift;
+    my $last_ip  = shift;
+    my $version  = shift || ( any { /:/ } $first_ip, $last_ip ) ? 6 : 4;
 
-    $first = Net::Works::Address->new_from_string(
-        string  => $first,
+    $first_ip = Net::Works::Address->new_from_string(
+        string  => $first_ip,
         version => $version,
-    ) unless ref $first;
+    ) unless ref $first_ip;
 
-    $last = Net::Works::Address->new_from_string(
-        string  => $last,
+    $last_ip = Net::Works::Address->new_from_string(
+        string  => $last_ip,
         version => $version,
-    ) unless ref $last;
+    ) unless ref $last_ip;
 
     my @ranges = $class->_remove_reserved_subnets_from_range(
-        $first->as_integer(),
-        $last->as_integer(),
+        $first_ip->as_integer(),
+        $last_ip->as_integer(),
         $version
     );
 
@@ -368,10 +370,10 @@ sub range_as_subnets {
     );
 
     sub _remove_reserved_subnets_from_range {
-        my $class   = shift;
-        my $first   = shift;
-        my $last    = shift;
-        my $version = shift;
+        my $class    = shift;
+        my $first_ip = shift;
+        my $last_ip  = shift;
+        my $version  = shift;
 
         my @ranges;
         my $add_remaining = 1;
@@ -380,39 +382,39 @@ sub range_as_subnets {
             my $reserved_first = $pn->[0];
             my $reserved_last  = $pn->[1];
 
-            next if ( $reserved_last <= $first );
-            last if ( $last < $reserved_first );
+            next if ( $reserved_last <= $first_ip );
+            last if ( $last_ip < $reserved_first );
 
-            push @ranges, [ $first, $reserved_first - 1 ]
-                if $first < $reserved_first;
+            push @ranges, [ $first_ip, $reserved_first - 1 ]
+                if $first_ip < $reserved_first;
 
-            if ( $last <= $reserved_last ) {
+            if ( $last_ip <= $reserved_last ) {
                 $add_remaining = 0;
                 last;
             }
 
-            $first = $reserved_last + 1;
+            $first_ip = $reserved_last + 1;
         }
 
-        push @ranges, [ $first, $last ] if $add_remaining;
+        push @ranges, [ $first_ip, $last_ip ] if $add_remaining;
 
         return @ranges;
     }
 }
 
 sub _split_one_range {
-    my $class   = shift;
-    my $first   = shift;
-    my $last    = shift;
-    my $version = shift;
+    my $class    = shift;
+    my $first_ip = shift;
+    my $last_ip  = shift;
+    my $version  = shift;
 
     my @subnets;
-    while ( $first <= $last ) {
-        my $max_network = _max_subnet( $first, $last, $version );
+    while ( $first_ip <= $last_ip ) {
+        my $max_network = _max_subnet( $first_ip, $last_ip, $version );
 
         push @subnets, $max_network;
 
-        $first = $max_network->last_as_integer + 1;
+        $first_ip = $max_network->last_as_integer + 1;
     }
 
     return @subnets;
@@ -482,11 +484,11 @@ __END__
   print $network->bits();               # 32
   print $network->version();            # 4
 
-  my $first = $network->first();
-  print $first->as_string();    # 192.0.2.0
+  my $first_address = $network->first();
+  print $first_address->as_string();    # 192.0.2.0
 
-  my $last = $network->last();
-  print $last->as_string();     # 192.0.2.255
+  my $last_address = $network->last();
+  print $last_address->as_string();     # 192.0.2.255
 
   my $iterator = $network->iterator();
   while ( my $ip = $iterator->() ) { print $ip . "\n"; }
@@ -611,7 +613,7 @@ C<192.0.2.0/25> and C<192.0.2.128/25>.
 If the original networks is a single address network (a /32 in IPv4 or /128 in
 IPv6) then this method returns an empty list.
 
-=head2 Net::Works::Network->range_as_subnets( $first, $last, $version )
+=head2 Net::Works::Network->range_as_subnets( $first_address, $last_address, $version )
 
 Given two IP addresses as strings, this method breaks the range up into the
 largest subnets that include all the IP addresses in the range (including the

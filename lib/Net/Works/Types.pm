@@ -20,6 +20,7 @@ our @EXPORT_OK = qw(
     Str
 );
 
+## no critic (ValuesAndExpressions::ProhibitImplicitNewlines, NamingConventions::Capitalization)
 {
     my $t = quote_sub(
         q{
@@ -114,7 +115,9 @@ our @EXPORT_OK = qw(
 
     sub Str () { $t }
 }
+## use critic
 
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines, Variables::ProhibitPackageVars)
 sub _confess {
     local $Carp::Internal{__PACKAGE__} = 1;
 
@@ -123,5 +126,6 @@ sub _confess {
         defined $_[1] ? $_[1] : 'undef'
     );
 }
+## use critic
 
 1;

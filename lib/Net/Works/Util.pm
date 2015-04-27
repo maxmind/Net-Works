@@ -20,6 +20,7 @@ our @EXPORT_OK = qw(
     _validate_ip_string
 );
 
+## no critic (Subroutines::ProhibitUnusedPrivateSubroutines)
 sub _string_address_to_integer {
     my $string  = shift;
     my $version = shift;

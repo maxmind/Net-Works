@@ -1,5 +1,7 @@
 package Net::Works;
 
+use strict;
+use warnings;
 use 5.010000;
 
 our $VERSION = '0.21';
