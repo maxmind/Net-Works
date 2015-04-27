@@ -3,6 +3,8 @@ package Net::Works::Util;
 use strict;
 use warnings;
 
+our $VERSION = '0.21';
+
 use Carp qw( confess );
 use Math::Int128 qw( net_to_uint128 uint128_to_net );
 use Socket qw( AF_INET AF_INET6 inet_pton inet_ntop );

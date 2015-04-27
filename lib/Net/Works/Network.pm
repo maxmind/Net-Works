@@ -3,6 +3,8 @@ package Net::Works::Network;
 use strict;
 use warnings;
 
+our $VERSION = '0.21';
+
 use Carp qw( confess );
 use List::AllUtils qw( any );
 use Math::Int128 qw( uint128 );
