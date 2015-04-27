@@ -139,6 +139,7 @@ use Net::Works::Network;
         '1.1.1.1/',   '1.1.1.1',    '11.0.0.0/10/10',
         ) {
 
+        ## no critic (Subroutines::ProhibitCallsToUnexportedSubs)
         my $safe_bad = B::perlstring($bad);
         like(
             exception {
@@ -153,6 +154,7 @@ use Net::Works::Network;
     }
 
     for my $bad ( undef, 'whatever', '1.1.1' ) {
+        ## no critic (Subroutines::ProhibitCallsToUnexportedSubs)
         my $safe_bad = B::perlstring($bad);
         like(
             exception {
@@ -170,6 +172,7 @@ use Net::Works::Network;
         '::1/-1', '::1/129', '::1/120;', "::1/120\n", '::1.1.1.1', '::1000',
         ) {
 
+        ## no critic (Subroutines::ProhibitCallsToUnexportedSubs)
         my $safe_bad = B::perlstring($bad);
         like(
             exception {
@@ -184,6 +187,7 @@ use Net::Works::Network;
     }
 
     for my $bad ( undef, 'whatever' ) {
+        ## no critic (Subroutines::ProhibitCallsToUnexportedSubs)
         my $safe_bad = B::perlstring($bad);
         like(
             exception {

@@ -3,6 +3,8 @@ package Net::Works::Address;
 use strict;
 use warnings;
 
+our $VERSION = '0.21';
+
 use Carp qw( confess );
 use Math::Int128 0.06 qw( uint128 uint128_to_hex uint128_to_number );
 use Net::Works::Types qw( PackedBinary Str );
@@ -125,7 +127,7 @@ sub as_bit_string {
     if ( $self->version == 6 ) {
         my $hex = uint128_to_hex( $self->as_integer() );
         my @ha  = $hex =~ /.{8}/g;
-        return join '', map { sprintf( '%032b', hex($_) ) } @ha;
+        return join q{}, map { sprintf( '%032b', hex($_) ) } @ha;
     }
     else {
         return sprintf( '%032b', $self->as_integer() );

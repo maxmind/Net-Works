@@ -1,14 +1,10 @@
 package Net::Works;
 
+use strict;
+use warnings;
 use 5.010000;
 
-# This is a hack to let us test code that requires a specific Net::Works
-# version against the Net-Works git repo code, but without actually setting
-# the $VERSION variable.
-BEGIN {
-    $Net::Works::{VERSION} = \99
-        unless exists $Net::Works::{VERSION};
-}
+our $VERSION = '0.21';
 
 1;
 
