@@ -3,6 +3,7 @@ use warnings;
 
 use Test::More 0.88;
 
+use Math::BigInt ();
 use Math::Int128 qw(uint128);
 use Net::Works::Address;
 use Net::Works::Network;
@@ -359,8 +360,8 @@ use Net::Works::Network;
     );
 }
 
-{
-    my $int = uint128(0);
+for my $zero ( uint128(0), Math::BigInt->bzero() ) {
+    my $int = $zero;
     my $net = Net::Works::Network->new_from_integer(
         integer       => $int,
         prefix_length => 32,
@@ -369,39 +370,46 @@ use Net::Works::Network;
 
     is(
         $net->as_string(), '0.0.0.0/32',
-        'a network created via new_from_integer with a uint128 integer and version => 4 stringifies correctly'
+        'a network created via new_from_integer with a '
+            . ref $int
+            . ' integer and version => 4 stringifies correctly'
     );
 }
 
-{
+for my $two ( uint128(2), Math::BigInt->new(2) ) {
+    my $type = ref $two;
+
     my $net = Net::Works::Network->new_from_integer(
-        integer       => ( uint128(2)**32 ),
+        integer       => ( $two**32 ),
         prefix_length => 96,
     );
 
     is(
         $net->as_string(), '::1:0:0/96',
-        'as_string for network created via new_from_integer with 2**32'
+        'as_string for network created via new_from_integer with 2**32, '
+            . $type
     );
 
     $net = Net::Works::Network->new_from_integer(
-        integer       => ( uint128(2)**64 ),
+        integer       => ( $two**64 ),
         prefix_length => 96,
     );
 
     is(
         $net->as_string(), '0:0:0:1::/96',
-        'as_string for network created via new_from_integer with 2**64'
+        'as_string for network created via new_from_integer with 2**64, '
+            . $type
     );
 
     $net = Net::Works::Network->new_from_integer(
-        integer       => ( uint128(2)**96 ),
+        integer       => ( $two**96 ),
         prefix_length => 96,
     );
 
     is(
         $net->as_string(), '0:1::/96',
-        'as_string for network created via new_from_integer with 2**96'
+        'as_string for network created via new_from_integer with 2**96, '
+            . $type
     );
 }
 
