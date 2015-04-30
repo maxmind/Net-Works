@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use namespace::autoclean 0.16;
 
-our $VERSION = '0.21';
+our $VERSION = '0.22';
 
 use Carp qw( confess );
 use Math::Int128 qw( string_to_uint128 uint128 uint128_to_number );

@@ -3,7 +3,7 @@ package Net::Works::Util;
 use strict;
 use warnings;
 
-our $VERSION = '0.21';
+our $VERSION = '0.22';
 
 use Carp qw( confess );
 use Math::Int128 qw( net_to_uint128 uint128_to_net );
