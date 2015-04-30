@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- `new_from_integer` will now accept a `Math::BigInt` in addition to a
+  `Math::UInt128` or a standard Perl integer.
+
+
 0.20     2014-10-16
 
 - Added numeric & string comparison overloading to Net::Works::Network.

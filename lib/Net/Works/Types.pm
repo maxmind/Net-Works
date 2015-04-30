@@ -40,7 +40,9 @@ our @EXPORT_OK = qw(
         q{
 (
     defined $_[0] && ( ( !ref $_[0] && $_[0] =~ /^[0-9]+\z/ )
-        || ( Scalar::Util::blessed( $_[0] ) && $_[0]->isa('Math::UInt128') ) )
+        || ( Scalar::Util::blessed( $_[0] )
+            && ( $_[0]->isa('Math::UInt128') || $_[0]->isa('Math::BigInt') ) )
+        )
     )
     or Net::Works::Types::_confess(
     '%s is not a valid integer for an IP address',

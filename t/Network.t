@@ -3,6 +3,7 @@ use warnings;
 
 use Test::More 0.88;
 
+use Math::BigInt ();
 use Math::Int128 qw(uint128);
 use Net::Works::Address;
 use Net::Works::Network;
@@ -359,50 +360,53 @@ use Net::Works::Network;
     );
 }
 
-{
-    my $int = uint128(0);
-    my $net = Net::Works::Network->new_from_integer(
-        integer       => $int,
-        prefix_length => 32,
-        version       => 4,
-    );
+for my $two ( uint128(2), Math::BigInt->new(2) ) {
+    subtest 'using ' . ref($two) . ' integer' => sub {
 
-    is(
-        $net->as_string(), '0.0.0.0/32',
-        'a network created via new_from_integer with a uint128 integer and version => 4 stringifies correctly'
-    );
-}
+        {
+            my $int = $two * 0;
+            my $net = Net::Works::Network->new_from_integer(
+                integer       => $int,
+                prefix_length => 32,
+                version       => 4,
+            );
 
-{
-    my $net = Net::Works::Network->new_from_integer(
-        integer       => ( uint128(2)**32 ),
-        prefix_length => 96,
-    );
+            is(
+                $net->as_string(), '0.0.0.0/32',
+                'a network created via new_from_integer with version => 4 stringifies correctly'
+            );
+        }
 
-    is(
-        $net->as_string(), '::1:0:0/96',
-        'as_string for network created via new_from_integer with 2**32'
-    );
+        my $net = Net::Works::Network->new_from_integer(
+            integer       => ( $two**32 ),
+            prefix_length => 96,
+        );
 
-    $net = Net::Works::Network->new_from_integer(
-        integer       => ( uint128(2)**64 ),
-        prefix_length => 96,
-    );
+        is(
+            $net->as_string(), '::1:0:0/96',
+            'as_string for network created via new_from_integer with 2**32'
+        );
 
-    is(
-        $net->as_string(), '0:0:0:1::/96',
-        'as_string for network created via new_from_integer with 2**64'
-    );
+        $net = Net::Works::Network->new_from_integer(
+            integer       => ( $two**64 ),
+            prefix_length => 96,
+        );
 
-    $net = Net::Works::Network->new_from_integer(
-        integer       => ( uint128(2)**96 ),
-        prefix_length => 96,
-    );
+        is(
+            $net->as_string(), '0:0:0:1::/96',
+            'as_string for network created via new_from_integer with 2**64'
+        );
 
-    is(
-        $net->as_string(), '0:1::/96',
-        'as_string for network created via new_from_integer with 2**96'
-    );
+        $net = Net::Works::Network->new_from_integer(
+            integer       => ( $two**96 ),
+            prefix_length => 96,
+        );
+
+        is(
+            $net->as_string(), '0:1::/96',
+            'as_string for network created via new_from_integer with 2**96'
+        );
+    };
 }
 
 {

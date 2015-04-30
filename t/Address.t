@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 
+use Math::BigInt;
 use Math::Int128 qw(uint128);
 use Test::Fatal;
 use Test::More 0.88;
@@ -267,41 +268,46 @@ use Net::Works::Address;
         2**32 - 1,
         'as_integer returns 2**32 - 1, IPv6'
     );
+}
 
-    my $max_128 = uint128(2)**128 - uint128(1);
-    $ip = Net::Works::Address->new_from_integer(
-        integer => $max_128,
-        version => 6,
-    );
+for my $one ( uint128(1), Math::BigInt->bone() ) {
+    subtest 'using ' . ref($one) . ' integer' => sub {
 
-    is(
-        $ip->as_string(),
-        'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
-        'new_from_integer(2**128 - 1), IPv6'
-    );
+        my $max_128 = ( $one * 2 )**128 - $one;
+        my $ip      = Net::Works::Address->new_from_integer(
+            integer => $max_128,
+            version => 6,
+        );
 
-    is(
-        $ip->as_integer(),
-        $max_128,
-        'as_integer returns 2**128 - 1, IPv6'
-    );
+        is(
+            $ip->as_string(),
+            'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
+            'new_from_integer(2**128 - 1), IPv6'
+        );
 
-    is(
-        $ip->as_bit_string(),
-        '1' x 128,
-        'as_bit_string returns 1x128'
-    );
+        is(
+            $ip->as_integer(),
+            $max_128,
+            'as_integer returns 2**128 - 1, IPv6'
+        );
 
-    $ip = Net::Works::Address->new_from_integer(
-        integer => uint128(1),
-        version => 4,
-    );
+        is(
+            $ip->as_bit_string(),
+            '1' x 128,
+            'as_bit_string returns 1x128'
+        );
 
-    is(
-        $ip->as_string(),
-        '0.0.0.1',
-        'as_string returns 0.0.0.1 even when new_from_integer is given a Math::Int128 object'
-    );
+        $ip = Net::Works::Address->new_from_integer(
+            integer => $one,
+            version => 4,
+        );
+
+        is(
+            $ip->as_string(),
+            '0.0.0.1',
+            'as_string returns 0.0.0.1'
+        );
+    };
 }
 
 {
