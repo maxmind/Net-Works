@@ -28,3 +28,9 @@ env:
     - AUTHOR_TESTING=1
 before_install:
   - eval $(curl https://travis-perl.github.io/init) --auto
+notifications:
+  email:
+    recipients:
+      - dev@maxmind.com
+    on_success: change
+    on_failure: always
