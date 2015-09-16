@@ -527,6 +527,11 @@ This method takes a C<string> parameter and an optional C<version>
 parameter. The C<string> parameter should be a string representation of an IP
 address subnet, e.g., "192.0.2.0/24".
 
+    my $network = Net::Works::Network->new_from_string(
+        string => '192.0.2.0/24'
+    );
+    print $network->as_string; # 192.0.2.0/24
+
 The C<version> parameter should be either C<4> or C<6>, but you don't really
 need this unless you're trying to force a dotted quad to be interpreted as an
 IPv6 network or to a force an IPv6 address colon-separated hex number to be
@@ -534,6 +539,12 @@ interpreted as an IPv4 network.
 
 If you pass an IPv4 network but specify the version as C<6> then we will add
 96 to the netmask.
+
+    my $network = Net::Works::Network->new_from_string(
+        string  => '192.0.2.0/24'
+        version => 6,
+    );
+    print $network->as_string; # ::192.0.2.0/120
 
 =head2 Net::Works::Network->new_from_integer( ... )
 
