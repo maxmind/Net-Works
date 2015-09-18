@@ -541,7 +541,7 @@ If you pass an IPv4 network but specify the version as C<6> then we will add
 96 to the netmask.
 
     my $network = Net::Works::Network->new_from_string(
-        string  => '192.0.2.0/24'
+        string  => '192.0.2.0/24',
         version => 6,
     );
     print $network->as_string; # ::192.0.2.0/120
