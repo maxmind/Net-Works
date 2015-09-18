@@ -76,7 +76,7 @@ sub new_from_string {
 
     return $class->new(
         _integer => _string_address_to_integer( $str, $version ),
-        version  => $version,
+        version => $version,
         %p,
     );
 }
