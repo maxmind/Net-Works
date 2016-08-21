@@ -466,6 +466,42 @@ for my $two ( uint128(2), Math::BigInt->new(2) ) {
     );
 }
 
+{
+    my @single = qw(
+        0.0.0.0/32
+        1.2.3.4/32
+        255.255.255.255/32
+        ::0/128
+        ::a/128
+        1234:5678:9abc:def0:1234:5678:9abc:def0/128
+    );
+
+    for my $s (@single) {
+        ok(
+            Net::Works::Network->new_from_string( string => $s )
+                ->is_single_address,
+            "$s is a single address network"
+        );
+    }
+
+    my @multi = qw(
+        0.0.0.0/31
+        1.2.3.4/31
+        63.255.255.255/2
+        ::0/127
+        ::a/1
+        1234:5678:9abc:def0:1234::/78
+    );
+
+    for my $m (@multi) {
+        ok(
+            !Net::Works::Network->new_from_string( string => $m )
+                ->is_single_address,
+            "$m is not a single address network"
+        );
+    }
+}
+
 sub _test_iterator {
     my $net              = shift;
     my $expect_count     = shift;

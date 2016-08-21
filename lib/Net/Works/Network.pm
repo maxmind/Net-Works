@@ -284,6 +284,13 @@ sub split {
 }
 ## use critic
 
+sub is_single_address {
+    my $self = shift;
+
+    return ( $self->version == 4 && $self->prefix_length == 32 )
+        || ( $self->version == 6 && $self->prefix_length == 128 );
+}
+
 sub range_as_subnets {
     my $class    = shift;
     my $first_ip = shift;
@@ -599,6 +606,11 @@ Returns the last IP in the network as an L<Net::Works::Address> object.
 
 Returns the last IP in the network as an integer. This may be a
 L<Math::Int128> object.
+
+=head2 $network->is_single_address()
+
+Returns true if the network contains just a single address (/32 in IPv4 or
+/128 in IPv6).
 
 =head2 $network->iterator()
 

@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+- Added a Net::Works::Network->is_single_address method. This returns true if
+  the network contains just one single address. Requested byAlexander
+  Hartmaier. GH #17.
+
+
 0.21     2015-04-30
 
 - `new_from_integer` will now accept a `Math::BigInt` in addition to a
