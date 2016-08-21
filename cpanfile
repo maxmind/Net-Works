@@ -18,8 +18,6 @@ on 'test' => sub {
   requires "B" => "0";
   requires "ExtUtils::MakeMaker" => "0";
   requires "File::Spec" => "0";
-  requires "IO::Handle" => "0";
-  requires "IPC::Open3" => "0";
   requires "Math::BigInt" => "0";
   requires "Test::Fatal" => "0";
   requires "Test::More" => "0.96";
@@ -36,7 +34,9 @@ on 'configure' => sub {
 };
 
 on 'develop' => sub {
-  requires "Code::TidyAll" => "0.24";
+  requires "File::Spec" => "0";
+  requires "IO::Handle" => "0";
+  requires "IPC::Open3" => "0";
   requires "Perl::Critic" => "1.123";
   requires "Perl::Tidy" => "20140711";
   requires "Pod::Coverage::Moose" => "0";
@@ -48,6 +48,7 @@ on 'develop' => sub {
   requires "Test::NoTabs" => "0";
   requires "Test::Pod" => "1.41";
   requires "Test::Pod::Coverage" => "1.08";
+  requires "Test::Portability::Files" => "0";
   requires "Test::Spelling" => "0.12";
   requires "Test::Synopsis" => "0";
   requires "Test::Version" => "1";
