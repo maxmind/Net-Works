@@ -4,7 +4,7 @@ Net::Works - Sane APIs for IP addresses and networks
 
 # VERSION
 
-version 0.22
+version 0.23
 
 # DESCRIPTION
 
@@ -68,6 +68,8 @@ through the web interface at [http://rt.cpan.org](http://rt.cpan.org).  I will b
 then you'll automatically be notified of progress on your bug as I make
 changes.
 
+Bugs may be submitted through [https://github.com/maxmind/Net-Works/issues](https://github.com/maxmind/Net-Works/issues).
+
 # AUTHORS
 
 - Dave Rolsky <autarch@urth.org>
@@ -79,12 +81,13 @@ changes.
 - Alexander Hartmaier <abraxxa@cpan.org>
 - Dave Rolsky <drolsky@maxmind.com>
 - Greg Oschwald <goschwald@maxmind.com>
+- Mark Fowler <mark@twoshortplanks.com>
 - TJ Mather <tjmather@maxmind.com>
 - William Stevenson <wstevenson@maxmind.com>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2016 by MaxMind, Inc.
+This software is copyright (c) 2017 by MaxMind, Inc.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
