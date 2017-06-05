@@ -10,6 +10,8 @@ use Math::Int128 qw( net_to_uint128 uint128_to_net );
 use Socket qw( AF_INET AF_INET6 inet_pton inet_ntop );
 use Scalar::Util qw( blessed );
 
+use namespace::clean;
+
 use Exporter qw( import );
 
 our @EXPORT_OK = qw(

@@ -52,7 +52,7 @@ use Net::Works::Network;
     _test_iterator(
         $net,
         16,
-        [ map { "1.1.1.$_" } 0 .. 15 ],
+        [ map {"1.1.1.$_"} 0 .. 15 ],
     );
 
     is(

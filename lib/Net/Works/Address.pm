@@ -3,6 +3,8 @@ package Net::Works::Address;
 use strict;
 use warnings;
 
+use namespace::autoclean;
+
 our $VERSION = '0.23';
 
 use Carp qw( confess );
