@@ -6,9 +6,12 @@ use warnings;
 our $VERSION = '0.23';
 
 use Carp qw( confess );
-use Exporter qw( import );
 use Scalar::Util ();
 use Sub::Quote qw( quote_sub );
+
+use namespace::clean;
+
+use Exporter qw( import );
 
 our @EXPORT_OK = qw(
     Int
@@ -32,7 +35,7 @@ our @EXPORT_OK = qw(
 }
     );
 
-    sub Int () { $t }
+    sub Int () {$t}
 }
 
 {
@@ -51,7 +54,7 @@ our @EXPORT_OK = qw(
 }
     );
 
-    sub IPInt () { $t }
+    sub IPInt () {$t}
 }
 
 {
@@ -65,7 +68,7 @@ our @EXPORT_OK = qw(
         }
     );
 
-    sub IPVersion () { $t }
+    sub IPVersion () {$t}
 }
 
 {
@@ -79,7 +82,7 @@ our @EXPORT_OK = qw(
 }
     );
 
-    sub PrefixLength () { $t }
+    sub PrefixLength () {$t}
 }
 
 {
@@ -93,7 +96,7 @@ our @EXPORT_OK = qw(
 }
     );
 
-    sub NetWorksAddress () { $t }
+    sub NetWorksAddress () {$t}
 }
 
 {
@@ -104,7 +107,7 @@ our @EXPORT_OK = qw(
 }
     );
 
-    sub PackedBinary () { $t }
+    sub PackedBinary () {$t}
 }
 
 {
@@ -115,7 +118,7 @@ our @EXPORT_OK = qw(
 }
     );
 
-    sub Str () { $t }
+    sub Str () {$t}
 }
 ## use critic
 

@@ -3,6 +3,8 @@ package Net::Works::Network;
 use strict;
 use warnings;
 
+use namespace::autoclean;
+
 our $VERSION = '0.23';
 
 use Carp qw( confess );
@@ -172,7 +174,6 @@ sub max_prefix_length {
 
     my $prefix_length = $self->prefix_length();
 
-    my $bits = $self->bits;
     while ($prefix_length) {
         my $mask = $self->_prefix_length_to_mask($prefix_length);
 
@@ -295,7 +296,7 @@ sub range_as_subnets {
     my $class    = shift;
     my $first_ip = shift;
     my $last_ip  = shift;
-    my $version  = shift || ( any { /:/ } $first_ip, $last_ip ) ? 6 : 4;
+    my $version  = shift || ( any {/:/} $first_ip, $last_ip ) ? 6 : 4;
 
     $first_ip = Net::Works::Address->new_from_string(
         string  => $first_ip,
@@ -377,7 +378,7 @@ sub range_as_subnets {
     );
 
     sub _remove_reserved_subnets_from_range {
-        my $class    = shift;
+        shift;
         my $first_ip = shift;
         my $last_ip  = shift;
         my $version  = shift;
@@ -410,7 +411,7 @@ sub range_as_subnets {
 }
 
 sub _split_one_range {
-    my $class    = shift;
+    shift;
     my $first_ip = shift;
     my $last_ip  = shift;
     my $version  = shift;

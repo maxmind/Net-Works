@@ -35,6 +35,7 @@ has address_family => (
     default => sub { $_[0]->version() == 6 ? AF_INET6 : AF_INET },
 );
 
+## no critic (ProhibitUnusedPrivateSubroutines)
 {
     my %max = (
         4 => 0xFFFFFFFF,

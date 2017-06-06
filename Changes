@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+- namespace::autoclean is now used to clean module namespaces.
+
+
 0.22     2016-08-21
 
 - Added a Net::Works::Network->is_single_address method. This returns true if
