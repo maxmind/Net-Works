@@ -71,7 +71,7 @@ use Net::Works::Network;
     for my $bad_str (
         undef,
         qw( -1 1.1 a-string google.com 1.2.3.555 a.3.4.5 ),
-        ) {
+    ) {
 
         my $str_val = defined $bad_str ? $bad_str : 'undef';
 
@@ -104,7 +104,7 @@ use Net::Works::Network;
     for my $bad_str (
         undef,
         qw( -1 1.1 a-string google.com 1.2.3.555 a.3.4.5 fffff:: abcd::1234::4321 g123::1234 ),
-        ) {
+    ) {
 
         my $str_val = defined $bad_str ? $bad_str : 'undef';
 
@@ -137,7 +137,7 @@ use Net::Works::Network;
     for my $bad (
         '1.1.1.1/-1', '1.1.1.1/33', '1.1.1.0/24;', "1.1.1.0/24\n",
         '1.1.1.1/',   '1.1.1.1',    '11.0.0.0/10/10',
-        ) {
+    ) {
 
         ## no critic (Subroutines::ProhibitCallsToUnexportedSubs)
         my $safe_bad = B::perlstring($bad);
@@ -170,7 +170,7 @@ use Net::Works::Network;
 
     for my $bad (
         '::1/-1', '::1/129', '::1/120;', "::1/120\n", '::1.1.1.1', '::1000',
-        ) {
+    ) {
 
         ## no critic (Subroutines::ProhibitCallsToUnexportedSubs)
         my $safe_bad = B::perlstring($bad);

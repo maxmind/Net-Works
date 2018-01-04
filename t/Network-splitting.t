@@ -62,10 +62,10 @@ use Net::Works::Network;
                         Net::Works::Address->new_from_string(
                             string  => $_,
                             version => 6
-                            )->as_string()
+                        )->as_string()
                     } @{$_}
                 ]
-                } (
+            } (
                 [ '::1.0.0.0',      '::9.255.255.255' ],
                 [ '::11.0.0.0',     '::100.63.255.255' ],
                 [ '::100.128.0.0',  '::126.255.255.255' ],
@@ -103,7 +103,7 @@ use Net::Works::Network;
                     'fec0::',
                     'feff:ffff:ffff:ffff:ffff:ffff:ffff:ffff',
                 ],
-                ),
+            ),
         ],
     );
 }
@@ -529,11 +529,11 @@ sub _test_remove_reserved_subnets {
                     )
             } @{$_}
         ]
-        } Net::Works::Network->_remove_reserved_subnets_from_range(
+    } Net::Works::Network->_remove_reserved_subnets_from_range(
         $first_ip,
         $last_ip,
         $version,
-        );
+    );
 
     is_deeply(
         \@got,

@@ -43,7 +43,7 @@ has address_family => (
     );
 
     sub _max {
-        my $self = shift;
+        my $self    = shift;
         my $version = shift // $self->version();
 
         return $max{$version};
