@@ -360,4 +360,56 @@ for my $one ( uint128(1), Math::BigInt->bone() ) {
     );
 }
 
+{
+    {
+        package Foo;
+        use base qw(Net::Works::Address);
+    }
+
+    my $ip = Foo->new_from_string( string => '1.2.3.4' );
+
+    my $next = $ip->next_ip();
+    isa_ok(
+        $next,
+        'Foo',
+        'return object of child class for value of ->next_ip'
+    );
+
+    my $prev = $ip->previous_ip();
+    isa_ok(
+        $prev,
+        'Foo',
+        'return object of child class for value of ->previous_ip'
+    );
+
+    my %tests = (
+        '::0'         => '0.0.0.0',
+        '::2'         => '0.0.0.2',
+        '::ffff'      => '0.0.255.255',
+        '::ffff:ffff' => '255.255.255.255',
+    );
+
+    for my $raw ( sort keys %tests ) {
+        my $ip = Foo->new_from_string(
+            string  => $raw,
+            version => 6,
+        );
+
+        is(
+            $ip->as_ipv4_string(),
+            $tests{$raw},
+            "$raw as IPv4 is $tests{$raw}"
+        );
+    }
+
+
+#    my $ipv4 = $ip->as_ipv4_string();
+#    isa_ok(
+#        $ipv4,
+#        'Foo',
+#        'return object of child class for value of ->as_ipv4_string'
+#    );
+
+}
+
 done_testing();
