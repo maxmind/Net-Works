@@ -87,9 +87,30 @@ sub new_from_integer {
     my $class = shift;
     my %p     = @_;
 
-    my $int     = delete $p{integer};
+    confess
+        "undef is not a valid integer for an IP address"
+        unless defined $p{integer};
+
+    my $int = delete $p{integer};
+
+    confess
+        "$int is not a valid integer for an IP address"
+        unless defined $int && $int =~ m/^\d+$/;
+
     my $version = delete $p{version};
-    $version ||= ref $int ? 6 : 4;
+
+    confess
+        'Version is required'
+        unless ( defined $version && ( $version == 4 || $version == 6 ));
+
+    my $uint_128 = uint128($int);
+    confess
+        'Invalid input'
+        if ( $int != $uint_128 );
+
+    confess
+        "$int is not a valid integer for an IP address"
+        if ( $version == 4 && $uint_128 >= 2**32 );
 
     return $class->new(
         _integer => $int,
