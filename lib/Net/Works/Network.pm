@@ -19,11 +19,6 @@ use Socket 1.99 qw( inet_pton AF_INET AF_INET6 );
 
 use integer;
 
-# Using this currently breaks overloading - see
-# https://rt.cpan.org/Ticket/Display.html?id=50938
-#
-#use namespace::autoclean;
-
 use overload (
     q{""} => '_overloaded_as_string',
     '<=>' => '_compare_overload',
