@@ -10,8 +10,15 @@ use Net::Works::Address;
 
 {
     my $ip = Net::Works::Address->new_from_string( string => '1.2.3.4' );
+<<<<<<< Updated upstream
     is( $ip->as_string(), '1.2.3.4',
         '->as_string returns string passed to constructor' );
+=======
+    is(
+        $ip->as_string(), '1.2.3.4',
+        '->as_string returns string passed to constructor'
+    );
+>>>>>>> Stashed changes
 
     my $next = $ip->next_ip();
     isa_ok( $next, 'Net::Works::Address', 'return value of ->next_ip' );
@@ -21,8 +28,15 @@ use Net::Works::Address;
     my $prev = $ip->previous_ip();
     isa_ok( $prev, 'Net::Works::Address', 'return value of ->previous_ip' );
 
+<<<<<<< Updated upstream
     is( $prev->as_string(), '1.2.3.3',
         'previous ip before 1.2.3.4 is 1.2.3.3' );
+=======
+    is(
+        $prev->as_string(), '1.2.3.3',
+        'previous ip before 1.2.3.4 is 1.2.3.3'
+    );
+>>>>>>> Stashed changes
 
     is( "$ip", '1.2.3.4', 'stringification of address object works' );
 
@@ -37,8 +51,15 @@ use Net::Works::Address;
     cmp_ok( $ip, '==', $same_ip,
         'numeric overloading (==) on address objects works' );
 
+<<<<<<< Updated upstream
     is( $ip <=> $same_ip,
         0, 'comparison overloading (==) on address objects works' );
+=======
+    is(
+        $ip <=> $same_ip,
+        0, 'comparison overloading (==) on address objects works'
+    );
+>>>>>>> Stashed changes
 }
 
 {
@@ -62,22 +83,42 @@ use Net::Works::Address;
         abcd::1000
     );
 
+<<<<<<< Updated upstream
     is_deeply( [ map { $_->as_string() } sort { $a <=> $b } @ips ],
         \@sorted, 'address objects sort numerically' );
 
     is_deeply( [ map { $_->as_string() } sort { $a cmp $b } @ips ],
         \@sorted, 'address objects sort alphabetically' );
+=======
+    is_deeply(
+        [ map { $_->as_string() } sort { $a <=> $b } @ips ],
+        \@sorted, 'address objects sort numerically'
+    );
+
+    is_deeply(
+        [ map { $_->as_string() } sort { $a cmp $b } @ips ],
+        \@sorted, 'address objects sort alphabetically'
+    );
+>>>>>>> Stashed changes
 }
 
 {
     my $ip = Net::Works::Address->new_from_string( string => '192.168.0.255' )
         ->next_ip();
+<<<<<<< Updated upstream
     is( $ip->as_string(), '192.168.1.0',
         '->next_ip wraps to the next ip address' );
+=======
+    is(
+        $ip->as_string(), '192.168.1.0',
+        '->next_ip wraps to the next ip address'
+    );
+>>>>>>> Stashed changes
 }
 
 {
     my $ip = Net::Works::Address->new_from_string( string => 'ffff::a:1234' );
+<<<<<<< Updated upstream
     is( $ip->as_string(), 'ffff::a:1234',
         '->as_string returns string passed to constructor' );
 
@@ -88,13 +129,38 @@ use Net::Works::Address;
     my $next = $ip->next_ip();
     is( $next->as_string(), 'ffff::a:1235',
         'next ip after ffff::a:1234 is ffff::a:1235' );
+=======
+    is(
+        $ip->as_string(), 'ffff::a:1234',
+        '->as_string returns string passed to constructor'
+    );
+
+    my $prev = $ip->previous_ip();
+    is(
+        $prev->as_string(), 'ffff::a:1233',
+        'previous ip before ffff::a:1234 is ffff::a:1233'
+    );
+
+    my $next = $ip->next_ip();
+    is(
+        $next->as_string(), 'ffff::a:1235',
+        'next ip after ffff::a:1234 is ffff::a:1235'
+    );
+>>>>>>> Stashed changes
 }
 
 {
     my $ip = Net::Works::Address->new_from_string(
         string => 'ffff::0000:000a:1234' );
+<<<<<<< Updated upstream
     is( $ip->as_string(), 'ffff::a:1234',
         '->as_string returns compact form of IPv6' );
+=======
+    is(
+        $ip->as_string(), 'ffff::a:1234',
+        '->as_string returns compact form of IPv6'
+    );
+>>>>>>> Stashed changes
 }
 
 {
@@ -142,8 +208,15 @@ use Net::Works::Address;
         version => 4,
     );
 
+<<<<<<< Updated upstream
     is( $ip->as_string(), '255.255.255.255',
         'new_from_integer(2**32 - 1), IPv4' );
+=======
+    is(
+        $ip->as_string(), '255.255.255.255',
+        'new_from_integer(2**32 - 1), IPv4'
+    );
+>>>>>>> Stashed changes
 
     is( $ip->as_integer(), 2**32 - 1, 'as_integer returns 2**32 - 1' );
 
@@ -165,8 +238,15 @@ use Net::Works::Address;
         version => 6,
     );
 
+<<<<<<< Updated upstream
     is( $ip->as_string(), '::255.255.255.255',
         'new_from_integer(2**32 - 1), IPv6' );
+=======
+    is(
+        $ip->as_string(), '::255.255.255.255',
+        'new_from_integer(2**32 - 1), IPv6'
+    );
+>>>>>>> Stashed changes
 
     is( $ip->as_bit_string(),
         ( '0' x 96 ) . ( '1' x 32 ),
@@ -190,8 +270,15 @@ for my $one ( uint128(1), Math::BigInt->bone() ) {
             'new_from_integer(2**128 - 1), IPv6'
         );
 
+<<<<<<< Updated upstream
         is( $ip->as_integer(), $max_128,
             'as_integer returns 2**128 - 1, IPv6' );
+=======
+        is(
+            $ip->as_integer(), $max_128,
+            'as_integer returns 2**128 - 1, IPv6'
+        );
+>>>>>>> Stashed changes
 
         is( $ip->as_bit_string(), '1' x 128, 'as_bit_string returns 1x128' );
 
@@ -233,8 +320,15 @@ for my $one ( uint128(1), Math::BigInt->bone() ) {
             version => 6,
         );
 
+<<<<<<< Updated upstream
         is( $ip->as_ipv4_string(), $tests{$raw},
             "$raw as IPv4 is $tests{$raw}" );
+=======
+        is(
+            $ip->as_ipv4_string(), $tests{$raw},
+            "$raw as IPv4 is $tests{$raw}"
+        );
+>>>>>>> Stashed changes
     }
 }
 
@@ -261,12 +355,25 @@ for my $one ( uint128(1), Math::BigInt->bone() ) {
     my $ip = Foo->new_from_string( string => '1.2.3.4' );
 
     my $next = $ip->next_ip();
+<<<<<<< Updated upstream
     isa_ok( $next, 'Foo',
         'return object of child class for value of ->next_ip' );
 
     my $prev = $ip->previous_ip();
     isa_ok( $prev, 'Foo',
         'return object of child class for value of ->previous_ip' );
+=======
+    isa_ok(
+        $next, 'Foo',
+        'return object of child class for value of ->next_ip'
+    );
+
+    my $prev = $ip->previous_ip();
+    isa_ok(
+        $prev, 'Foo',
+        'return object of child class for value of ->previous_ip'
+    );
+>>>>>>> Stashed changes
 
     my %tests = (
         '::0'         => '0.0.0.0',
@@ -281,8 +388,15 @@ for my $one ( uint128(1), Math::BigInt->bone() ) {
             version => 6,
         );
 
+<<<<<<< Updated upstream
         is( $foo->as_ipv4_string(),
             $tests{$raw}, "$raw as IPv4 is $tests{$raw}" );
+=======
+        is(
+            $foo->as_ipv4_string(),
+            $tests{$raw}, "$raw as IPv4 is $tests{$raw}"
+        );
+>>>>>>> Stashed changes
     }
 }
 
