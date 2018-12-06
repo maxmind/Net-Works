@@ -357,7 +357,7 @@ sub range_as_subnets {
                 Net::Works::Network->new_from_string(
                     string  => $_,
                     version => 4
-                    )
+                )
                 } @reserved_4,
         ],
         6 => [
@@ -367,7 +367,7 @@ sub range_as_subnets {
                 Net::Works::Network->new_from_string(
                     string  => $_,
                     version => 6
-                    )
+                )
                 } @reserved_6,
         ],
     );
@@ -430,7 +430,7 @@ sub _max_subnet {
 
     my $prefix_length = $version == 6 ? 128 : 32;
 
-    my $v = $ip;
+    my $v            = $ip;
     my $reverse_mask = $version == 6 ? uint128(1) : 1;
 
     while (( $v & 1 ) == 0

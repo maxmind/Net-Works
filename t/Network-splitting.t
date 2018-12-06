@@ -526,7 +526,7 @@ sub _test_remove_reserved_subnets {
                 Net::Works::Address->new_from_integer(
                     integer => $_,
                     version => $version
-                    )
+                )
             } @{$_}
         ]
     } Net::Works::Network->_remove_reserved_subnets_from_range(
