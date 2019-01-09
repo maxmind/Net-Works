@@ -112,7 +112,7 @@ sub as_ipv4_string {
         'Cannot represent IP address larger than 2**32-1 as an IPv4 string'
         if $self->as_integer() >= 2**32;
 
-    return __PACKAGE__->new_from_integer(
+    return ( ref $self )->new_from_integer(
         integer => $self->as_integer(),
         version => 4,
     )->as_string();
@@ -141,7 +141,7 @@ sub next_ip {
     confess "$self is the last address in its range"
         if $self->as_integer() == $self->_max;
 
-    return __PACKAGE__->new_from_integer(
+    return ( ref $self )->new_from_integer(
         integer => $self->as_integer() + 1,
         version => $self->version(),
     );
@@ -153,7 +153,7 @@ sub previous_ip {
     confess "$self is the first address in its range"
         if $self->as_integer() == 0;
 
-    return __PACKAGE__->new_from_integer(
+    return ( ref $self )->new_from_integer(
         integer => $self->as_integer() - 1,
         version => $self->version(),
     );

@@ -360,4 +360,38 @@ for my $one ( uint128(1), Math::BigInt->bone() ) {
     );
 }
 
+{
+    @DummyPackageName::ISA = qw( Net::Works::Address );
+
+    my $ip = DummyPackageName->new_from_string( string => '1.2.3.4' );
+
+    my $next = $ip->next_ip();
+    isa_ok(
+        $next,
+        'DummyPackageName',
+    );
+
+    my $prev = $ip->previous_ip();
+    isa_ok(
+        $prev,
+        'DummyPackageName',
+    );
+}
+
+{
+    # chain through to overriden new_from_integer correctly
+    @AnotherDummyPackageName::ISA = qw( Net::Works::Address );
+
+    sub AnotherDummyPackageName::new_from_integer {
+        my $class = shift;
+        return $class->new_from_string( string => '2.2.2.2' );
+    }
+
+    my $ip = AnotherDummyPackageName->new_from_string(
+        string  => '::0',
+        version => 6,
+    );
+    is( $ip->as_ipv4_string, '2.2.2.2', 'test overloaded method' );
+}
+
 done_testing();
