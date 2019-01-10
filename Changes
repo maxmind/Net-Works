@@ -2,6 +2,13 @@
 
 - namespace::autoclean is now used to clean module namespaces.
 
+- confessions now correctly skip internal stack frames
+
+- Subclasses of Net::Works::Addresses correctly return instances of the subclass
+  when next_ip and previous_ip are called, and as_ipv4_string correctly respects
+  overridden new_from_integer methods.  Thanks to edmundadjei for pointing out
+  this issue and helping develop a fix. GH #23.
+
 
 0.22     2016-08-21
 

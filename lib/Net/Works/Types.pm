@@ -124,7 +124,7 @@ our @EXPORT_OK = qw(
 
 ## no critic (Subroutines::ProhibitUnusedPrivateSubroutines, Variables::ProhibitPackageVars)
 sub _confess {
-    local $Carp::Internal{__PACKAGE__} = 1;
+    local $Carp::Internal{ (__PACKAGE__) } = 1;
 
     confess sprintf(
         $_[0],
